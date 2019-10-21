@@ -1,0 +1,73 @@
+
+# samples_file: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/samples.txt
+wd: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs
+
+tmp_folder: /scratch/ft413468
+
+log_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/src/snakemake/logs
+environments_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/src/snakemake/environments
+
+raw_reads_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/reads
+
+trimmed_reads_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/trimmed_reads
+
+alignments_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/alignments
+
+reports_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/bismark_reports
+
+nucleotide_stats_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/nucleotide_stats
+
+genome_fasta: /bmt-data/genomics/reference/hg19/hg19.fa
+
+bismark_index_path: /bmt-data/genomics/reference/bismark/hg19
+
+ensembl_root: "/bmt-data/genomics/reference/Ensembl"
+
+ensembl_version: "grch37/release-97"
+
+methylkitdb_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/methylDB
+
+RData_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/R_data
+
+pictures_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/pictures
+tables_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/tables
+
+
+dmr_window_size: 500
+dmr_step_size: 500
+dmr_difference: 25
+dmr_qvalue: 0.01
+
+samples:
+    - SRR4048940
+    - SRR4048941
+    - SRR4048942
+    - SRR4048943
+    - SRR4048944
+    - SRR4048945
+    - SRR4048946
+    - SRR4048947
+    - SRR4048948
+    - SRR4048949
+    - SRR4048950
+    - SRR4048951
+    - SRR4048952
+    - SRR4048953
+    - SRR4048954
+    - SRR4048955
+    - SRR4048956
+    - SRR4048957
+    - SRR4048958
+    - SRR4048959
+    - TMP34p14_FRBS190660163-1a_HLKMYDSXX_L3
+    - TMP34p14_FRBS190660163-1a_HLLW5DSXX_L4
+    - TMP45p18_FRBS190660164-1a_HLKLYDSXX_L4
+    - TMP45p18_FRBS190660164-1a_HLLW5DSXX_L4
+    - TMP46p8_FRBS190660165-1a_HLKMYDSXX_L3
+    - TMP46p8_FRBS190660165-1a_HLLW5DSXX_L4
+    - TMP51p11_FRBS190660166-1a_HLFYCDSXX_L3
+    - TMP51p11_FRBS190660166-1a_HLLW5DSXX_L4
+    - TMP55p9_FRBS190660167-1a_HLFYCDSXX_L3
+    - TMP55p9_FRBS190660167-1a_HLLL7DSXX_L3
+
+

@@ -1,0 +1,6 @@
+channels:
+    - bioconda
+    - conda-forge
+dependencies:
+    - bioconductor-methylkit=1.10.0
+    - bioconductor-genomation=1.16.0
