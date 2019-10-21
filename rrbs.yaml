@@ -1,0 +1,7 @@
+channels:
+    - bioconda
+dependencies:
+    - trim-galore=0.6.4
+    - samtools=1.9
+    - bowtie2=2.3.5
+    - bismark=0.22.1
