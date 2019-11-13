@@ -4,8 +4,9 @@ input_paths <- snakemake@input
 methylkitdb_folder <- snakemake@params[["methylkitdb_folder"]]
 methylkit_rdata_path <- snakemake@output[["methylRawObj"]]
 
-sample.id <- gsub("^(.+)_1_val_1.+$", "\\1", basename(as.character(input_paths)))
-treatment <- ifelse(grepl("SRR", sample.id), 0, 1)
+sample_sheet <- read.csv(snakemake@input[["sample_sheet"]], header = TRUE)
+sample.id <- sample_sheet$sample_name
+treatment <- sample_sheet$treatment
 
 message(sprintf("MethylKit database folder is: %s", methylkitdb_folder))
 methylRawObj <- methRead(input_paths,

@@ -224,6 +224,7 @@ rule make_methylkit_db:
     "Generating MethylKit database..."
   input:
     expand(os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"])
+    sample_sheet=config["sample_sheet"]
   output:
     methylRawObj=os.path.join(config["RData_folder"], "methylRawObj.rds"),
     bgzFiles=expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),

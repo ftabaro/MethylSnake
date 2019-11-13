@@ -32,7 +32,6 @@ RData_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/R_data
 pictures_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/pictures
 tables_folder: /lustre/bmt-data/genomics/projects/glioma_cellline_rrbs/tables
 
-
 dmr_window_size: 500
 dmr_step_size: 500
 dmr_difference: 25
