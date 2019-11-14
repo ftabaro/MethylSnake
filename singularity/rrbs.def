@@ -1,0 +1,27 @@
+Bootstrap: docker
+From: continuumio/miniconda3:4.7.12
+
+%labels
+
+  Author "Francesco Tabaro"
+  Institution "Tampere University"
+  Version v1.0
+
+%help
+
+  A container to run RRBS data analysis
+
+%environment
+
+  export LC_ALL=C
+  export PATH="/opt/conda/bin:$PATH"
+
+%post
+    export PATH="/opt/conda/bin:$PATH"
+    apt-get -qq update
+    apt-get -qq install -q r-base
+    R -e "install.packages('biocManager', repos = 'https://cloud.r-project.org')"
+    R -e "library(biocManager); install('methylKit')"
+
+    conda install -c conda-forge pyaml=19.4.1
+    conda install -c bioconda bismark
