@@ -37,10 +37,13 @@ def make_parser():
     parser.add_argument("--wd", required=True)
     parser.add_argument("--genome-path", required=True)
     parser.add_argument("--index-folder", required=True)
-    parser.add_argument("--ensembl-root", required=True)
-    parser.add_argument("--ensembl-version", required=True)
     parser.add_argument("--sample-sheet", required=True)
 
+    parser.add_argument("--annotation-file", required=False)
+#    parser.add_argument("--ensembl-root", required=False)
+#    parser.add_argument("--ensembl-version", required=False)
+
+    parser.add_argument("--environments-folder", default="../environments")
     parser.add_argument("--tmp-folder", default="tmp")
     parser.add_argument("--log-folder", default="~/var/log")
     parser.add_argument("--reads-folder", default="reads")
@@ -52,10 +55,14 @@ def make_parser():
     parser.add_argument("--rdata-folder", default="RData")
     parser.add_argument("--pictures-folder", default="pictures")
     parser.add_argument("--tables-folder", default="tables")
-    parser.add_argument("--tile-size", default=500)
-    parser.add_argument("--step-size", default=500)
-    parser.add_argument("--dmr-diff", default=25)
+    parser.add_argument("--dmr-window-size", default=500)
+    parser.add_argument("--dmr-step-size", default=500)
+    parser.add_argument("--dmr-difference", default=25)
     parser.add_argument("--dmr-qvalue", default=0.01)
+
+    
+    parser.add_argument("--mate1-pattern", default="_1.fastq.gz")
+    parser.add_argument("--mate2-pattern", default="_2.fastq.gz")
 
     args = parser.parse_args()
     return vars(args)
@@ -63,12 +70,11 @@ def make_parser():
 
 def validate_args(args):
 
-    for k in ["config_path", "wd", "genome_path", "index_folder", "ensembl_root", "sample_sheet"]:
+    for k in ["config_path", "wd", "genome_path", "index_folder", "sample_sheet", "environments_folder"]:
         if not os.path.isabs(args[k]) and args[k] != "-":
             args[k] = os.path.abspath(args[k])
 
-    for k in ["tmp_folder", "log_folder", "reads_folder", "trimmed_folder", "alignments_folder", "reports_folder",
-              "nucleotide_stats_folder", "methylkitdb_folder", "rdata_folder", "pictures_folder", "tables_folder"]:
+    for k in ["tmp_folder", "log_folder", "reads_folder", "trimmed_folder", "alignments_folder", "reports_folder", "nucleotide_stats_folder", "methylkitdb_folder", "rdata_folder", "pictures_folder", "tables_folder"]:
         if not os.path.isabs(args[k]):
             args[k] = os.path.join(args["wd"], args[k])
 

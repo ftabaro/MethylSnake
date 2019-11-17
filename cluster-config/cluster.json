@@ -2,7 +2,7 @@
     "__default__":
     {
         "jobname"   : "{rule}",
-        "log"       : "logs/%x-%j.log",
+        "log"       : "slurm-%x-%j.log",
         "ntasks"    : 1,
         "cpus"      : 1,
         "mem"       : "4G",
