@@ -36,7 +36,7 @@ def make_parser():
     parser.add_argument("--config-path", required=True)
     parser.add_argument("--wd", required=True)
     parser.add_argument("--genome-path", required=True)
-    parser.add_argument("--index-folder", required=True)
+    parser.add_argument("--bismark-index-path", required=True)
     parser.add_argument("--sample-sheet", required=True)
 
     parser.add_argument("--annotation-file", required=False)
@@ -60,9 +60,9 @@ def make_parser():
     parser.add_argument("--dmr-difference", default=25)
     parser.add_argument("--dmr-qvalue", default=0.01)
 
-    
-    parser.add_argument("--mate1-pattern", default="_1.fastq.gz")
-    parser.add_argument("--mate2-pattern", default="_2.fastq.gz")
+    parser.add_argument("--mate1-pattern", default="_1")
+    parser.add_argument("--mate2-pattern", default="_2")
+    parser.add_argument("--fastq-extension", default="_2")
 
     args = parser.parse_args()
     return vars(args)
@@ -70,7 +70,7 @@ def make_parser():
 
 def validate_args(args):
 
-    for k in ["config_path", "wd", "genome_path", "index_folder", "sample_sheet", "environments_folder"]:
+    for k in ["config_path", "wd", "genome_path", "bismark_index_path", "sample_sheet", "environments_folder"]:
         if not os.path.isabs(args[k]) and args[k] != "-":
             args[k] = os.path.abspath(args[k])
 

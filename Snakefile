@@ -4,14 +4,17 @@ singularity: "docker://continuumio/miniconda3:4.7.10"
 #localrules: bismark2report, bismark2summary, bam2nuc, filter_incomplete_conversions
 localrules: bismark2report, bismark2summary
 
+mate1_root = "{sample}" + config["mate1_pattern"]
+mate2_root = "{sample}" + config["mate2_pattern"]
+
 rule all:
     message: "all done!"
     input:
       expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),
-      expand(os.path.join(config["reports_folder"], "{sample}_1_val_1_bismark_bt2_PE_report.html"), sample=config["samples"]),
+      expand(os.path.join(config["reports_folder"], mate1_root + "_val_1_bismark_bt2_PE_report.html"), sample=config["samples"]),
       os.path.join(config["alignments_folder"], "bismark_summary_report.html"),
-      expand(os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
-      expand(os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
+      expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
+      expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
       expand(os.path.join(config["pictures_folder"], "{sample}_preliminary_stats.pdf"), sample=config["samples"]),
       os.path.join(config["rdata_folder"], "methylMergedObj.rds"),
       os.path.join(config["rdata_folder"], "dmr_annotated.rds")
@@ -24,12 +27,12 @@ rule all:
 rule trim:
     message: "Performing reads trimming..."
     input:
-      [ os.path.join(config["reads_folder"], "{sample}") + config["mate1_pattern"], os.path.join(config["reads_folder"], "{sample}") + config["mate2_pattern"]]
+      [ os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]), os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]) ]
     output:
-      os.path.join(config["trimmed_folder"], "{sample}_1_val_1.fq.gz"),
-      os.path.join(config["trimmed_folder"], "{sample}_1.fastq.gz_trimming_report.txt"),
-      os.path.join(config["trimmed_folder"], "{sample}_2_val_2.fq.gz"),
-      os.path.join(config["trimmed_folder"], "{sample}_2.fastq.gz_trimming_report.txt"),
+      os.path.join(config["trimmed_folder"], mate1_root  + "_val_1.fq.gz"),
+      os.path.join(config["trimmed_folder"], mate1_root  + ".fastq.gz_trimming_report.txt"),
+      os.path.join(config["trimmed_folder"], mate2_root  + "_val_2.fq.gz"),
+      os.path.join(config["trimmed_folder"], mate2_root  + ".fastq.gz_trimming_report.txt"),
     conda:
       os.path.join(config["environments_folder"], "rrbs.yaml")
     params:
@@ -50,12 +53,14 @@ rule trim:
 rule bismark_align:
     message: "Performing alignment..."
     input:
-      os.path.join(config["trimmed_folder"], "{sample}_1_val_1.fq.gz"),
-      os.path.join(config["trimmed_folder"], "{sample}_2_val_2.fq.gz")
+      os.path.join(config["trimmed_folder"], mate1_root + "_val_1.fq.gz"),
+      os.path.join(config["trimmed_folder"], mate2_root + "_val_2.fq.gz")
     output:
-      os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.bam"),
-      os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_PE_report.txt"),
-      os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nucleotide_stats.txt")
+      os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.bam"),
+      os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_PE_report.txt"),
+      os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nucleotide_stats.txt")
+    params:
+      config["tmp_folder"]
     log:
       os.path.join(config["log_folder"], "bismark", "{sample}.log")
     conda: os.path.join(config["environments_folder"], "rrbs.yaml")
@@ -64,7 +69,7 @@ rule bismark_align:
       os.path.join(config["log_folder"], "bismark", "{sample}.benchmark.log")
     shell:
       """
-      bismark --phred33-quals --bowtie2 -p {threads} --genome {config[bismark_index_path]} --unmapped --ambiguous --ambig_bam --nucleotide_coverage --output_dir {config[alignments_folder]} --fastq --temp_dir /scratch/ft413468/ -1 {input[0]} -2 {input[1]}
+      bismark --phred33-quals --bowtie2 -p {threads} --genome {config[bismark_index_path]} --unmapped --ambiguous --ambig_bam --nucleotide_coverage --output_dir {config[alignments_folder]} --fastq --temp_dir {params[0]} -1 {input[0]} -2 {input[1]}
       """
 
 # rule samtools_sort:
@@ -96,12 +101,12 @@ rule bismark_align:
 rule methylation_extractor:
     message: "Performing methylation extraction..."
     input:
-      os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.bam")
+      os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.bam")
     output:
-      os.path.join(config["alignments_folder"], "CpG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"),
-      os.path.join(config["alignments_folder"], "CHG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"),
-      os.path.join(config["alignments_folder"], "CHH_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"),
-      os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.CpG_report.txt.gz")
+      os.path.join(config["alignments_folder"], "CpG_context_"+ mate1_root +"_val_1_bismark_bt2_pe.txt.gz"),
+      os.path.join(config["alignments_folder"], "CHG_context_"+ mate1_root +"_val_1_bismark_bt2_pe.txt.gz"),
+      os.path.join(config["alignments_folder"], "CHH_context_"+ mate1_root +"_val_1_bismark_bt2_pe.txt.gz"),
+      os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz")
     log:
       os.path.join(config["log_folder"], "bismark_methylation_extractor", "{sample}.log")
     conda:
@@ -118,12 +123,12 @@ rule methylation_extractor:
 rule bismark2report:
   message: "Generating reports... "
   input:
-      expand(os.path.join(config["alignments_folder"], "CpG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
-      expand(os.path.join(config["alignments_folder"], "CHG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
-      expand(os.path.join(config["alignments_folder"], "CHH_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
-      expand(os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nucleotide_stats.txt"), sample=config["samples"])
+      expand(os.path.join(config["alignments_folder"], "CpG_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
+      expand(os.path.join(config["alignments_folder"], "CHG_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
+      expand(os.path.join(config["alignments_folder"], "CHH_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
+      expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nucleotide_stats.txt"), sample=config["samples"])
   output:
-      os.path.join(config["reports_folder"], "{sample}_1_val_1_bismark_bt2_PE_report.html")
+      os.path.join(config["reports_folder"], mate1_root + "_val_1_bismark_bt2_PE_report.html")
   log:
       os.path.join(config["log_folder"], "bismark2report", "{sample}.log")
   conda:
@@ -141,9 +146,9 @@ rule bismark2report:
 rule bismark2summary:
   message: "Generating summary... "
   input:
-    expand(os.path.join(config["alignments_folder"], "CpG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
-    expand(os.path.join(config["alignments_folder"], "CHG_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
-    expand(os.path.join(config["alignments_folder"], "CHH_context_{sample}_1_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"])
+    expand(os.path.join(config["alignments_folder"], "CpG_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
+    expand(os.path.join(config["alignments_folder"], "CHG_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
+    expand(os.path.join(config["alignments_folder"], "CHH_context_"+ mate1_root + "_val_1_bismark_bt2_pe.txt.gz"), sample=config["samples"]),
   output:
     os.path.join(config["alignments_folder"], "bismark_summary_report.html")
   log:
@@ -163,10 +168,10 @@ rule bismark2summary:
 rule filter_incomplete_conversions:
   message: "Filtering incomplete conversions..."
   input:
-    os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.bam")
+    os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.bam")
   output:
-    os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nonCG_filtered.bam"),
-    os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam")
+    os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"),
+    os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam")
   log:
     os.path.join(config["log_folder"], "filter_non_conversion", "{sample}.log")
   conda:
@@ -225,7 +230,7 @@ rule make_methylkit_db:
   message:
     "Generating MethylKit database..."
   input:
-    expand(os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"]),
+    expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"]),
     sample_sheet=config["sample_sheet"]
   output:
     methylRawObj=os.path.join(config["rdata_folder"], "methylRawObj.rds"),
