@@ -1,6 +1,6 @@
 import os
 
-singularity: "docker://continuumio/miniconda3:4.7.10"
+singularity: config["singularity_container"]
 #localrules: bismark2report, bismark2summary, bam2nuc, filter_incomplete_conversions
 localrules: bismark2report, bismark2summary
 
@@ -33,8 +33,8 @@ rule trim:
       os.path.join(config["trimmed_folder"], mate2_root  + "_val_2.fq.gz"),
       os.path.join(config["trimmed_folder"], mate1_root  + config["fastq_extension"] + "_trimming_report.txt"),
       os.path.join(config["trimmed_folder"], mate2_root  + config["fastq_extension"] + "_trimming_report.txt"),
-    conda:
-      os.path.join(config["environments_folder"], "rrbs.yaml")
+    #conda:
+    #  os.path.join(config["environments_folder"], "rrbs.yaml")
     params:
       quality_filter_value="22",
     log:
@@ -63,7 +63,7 @@ rule bismark_align:
       config["tmp_folder"]
     log:
       os.path.join(config["log_folder"], "bismark", "{sample}.log")
-    conda: os.path.join(config["environments_folder"], "rrbs.yaml")
+    #conda: os.path.join(config["environments_folder"], "rrbs.yaml")
     threads: 4
     benchmark:
       os.path.join(config["log_folder"], "bismark", "{sample}.benchmark.log")
@@ -131,8 +131,8 @@ rule bismark2report:
       os.path.join(config["reports_folder"], mate1_root + "_val_1_bismark_bt2_PE_report.html")
   log:
       os.path.join(config["log_folder"], "bismark2report", "{sample}.log")
-  conda:
-      os.path.join(config["environments_folder"], "rrbs.yaml")
+  #conda:
+  #    os.path.join(config["environments_folder"], "rrbs.yaml")
   benchmark:
       os.path.join(config["log_folder"], "bismark2report", "{sample}.benchmark.log")
   threads: 1
@@ -153,8 +153,8 @@ rule bismark2summary:
     os.path.join(config["alignments_folder"], "bismark_summary_report.html")
   log:
     os.path.join(config["log_folder"], "bismark2summary", "bismark_summary_report.log")
-  conda:
-    os.path.join(config["environments_folder"], "rrbs.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "rrbs.yaml")
   benchmark:
       os.path.join(config["log_folder"], "bismark2summary", "bismark_summary_report.benchmark.log")
   threads: 1
@@ -174,8 +174,8 @@ rule filter_incomplete_conversions:
     os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam")
   log:
     os.path.join(config["log_folder"], "filter_non_conversion", "{sample}.log")
-  conda:
-    os.path.join(config["environments_folder"], "rrbs.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "rrbs.yaml")
   benchmark:
     os.path.join(config["log_folder"], "filter_non_conversion", "{sample}.benchmark.log")
   threads: 1
@@ -211,8 +211,8 @@ rule convert_gtf_to_bed12:
   output:
     re.sub("gtf", "bed12", config["annotation_file"])
 #    os.path.join(config["ensembl_root"], config["ensembl_version"], "gtf/homo_sapiens/Homo_sapiens.GRCh37.87.bed12.gz")
-  conda:
-    os.path.join(config["environments_folder"], "rrbs.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "rrbs.yaml")
   params:
     tmp_dir=config["tmp_folder"]
   shell:
@@ -239,8 +239,8 @@ rule make_methylkit_db:
   params:
     methylkitdb_folder=config["methylkitdb_folder"],
     pictures_folder=config["pictures_folder"]
-  conda:
-    os.path.join(config["environments_folder"], "methylkit.yaml")
+  #conda:
+  ##  os.path.join(config["environments_folder"], "methylkit.yaml")
   script:
     "scripts/methylkit/make_db.R"
 
@@ -254,8 +254,8 @@ rule methylkit_merge_samples:
     methylMergedObj=os.path.join(config["rdata_folder"], "methylMergedObj.rds"),
     correlogram=os.path.join(config["pictures_folder"], "samples_correlation.pdf"),
     clustering=os.path.join(config["pictures_folder"], "samples_clustering_pca.pdf")
-  conda:
-    os.path.join(config["environments_folder"], "methylkit.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "methylkit.yaml")
   script:
     "scripts/methylkit/merge_samples.R"
 
@@ -277,8 +277,8 @@ rule methylkit_detect_dmr:
     step_size=config["dmr_step_size"],
     difference=config["dmr_difference"],
     qvalue=config["dmr_qvalue"]
-  conda:
-    os.path.join(config["environments_folder"], "methylkit.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "methylkit.yaml")
   script:
     "scripts/methylkit/detect_dmr.R"
 
@@ -292,7 +292,7 @@ rule annotate_dmr:
     gene_part_annotation_plot=os.path.join(config["pictures_folder"], "dmr_annotation.pdf"),
     tss_association=os.path.join(config["tables_folder"], "tss_association.csv"),
     genomic_features_percentages=os.path.join(config["tables_folder"], "genomic_features_percentages.txt")
-  conda:
-    os.path.join(config["environments_folder"], "methylkit.yaml")
+  #conda:
+  #  os.path.join(config["environments_folder"], "methylkit.yaml")
   script:
     "scripts/methylkit/annotate_dmr.R"

@@ -44,6 +44,8 @@ def make_parser():
 #    parser.add_argument("--ensembl-version", required=False)
 
     parser.add_argument("--environments-folder", default="../environments")
+    parser.add_argument("--singularity-container", default="/home/ft413468/containers/methylkit.sif")
+
     parser.add_argument("--tmp-folder", default="tmp")
     parser.add_argument("--log-folder", default="~/var/log")
     parser.add_argument("--reads-folder", default="reads")
