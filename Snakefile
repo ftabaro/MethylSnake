@@ -30,9 +30,9 @@ rule trim:
       [ os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]), os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]) ]
     output:
       os.path.join(config["trimmed_folder"], mate1_root  + "_val_1.fq.gz"),
-      os.path.join(config["trimmed_folder"], mate1_root  + ".fastq.gz_trimming_report.txt"),
       os.path.join(config["trimmed_folder"], mate2_root  + "_val_2.fq.gz"),
-      os.path.join(config["trimmed_folder"], mate2_root  + ".fastq.gz_trimming_report.txt"),
+      os.path.join(config["trimmed_folder"], mate1_root  + config["fastq_extension"] + "_trimming_report.txt"),
+      os.path.join(config["trimmed_folder"], mate2_root  + config["fastq_extension"] + "_trimming_report.txt"),
     conda:
       os.path.join(config["environments_folder"], "rrbs.yaml")
     params:
@@ -41,7 +41,7 @@ rule trim:
       os.path.join(config["log_folder"], "trim_galore", "{sample}.log")
     benchmark:
       os.path.join(config["log_folder"], "trim_galore", "{sample}.benchmark.log")
-    threads: 8
+    threads: 4
     shell:
       """
       OUTPUT=$(dirname {output[0]})
@@ -116,7 +116,7 @@ rule methylation_extractor:
     threads: 9
     shell:
       """
-      bismark_methylation_extractor --paired-end --comprehensive --gzip --output {config[alignments_folder]} --multicore $(( {threads} / 3 )) --bedGraph --remove_spaces --buffer_size 80% --cytosine_report --genome_folder $(dirname {config[genome_fasta]}) --ignore_r2 2 {input[0]}
+      bismark_methylation_extractor --paired-end --comprehensive --gzip --output {config[alignments_folder]} --multicore $(( {threads} / 3 )) --bedGraph --remove_spaces --buffer_size 80% --cytosine_report --genome_folder $(dirname {config[genome_path]}) --ignore_r2 2 {input[0]}
       """
 
 

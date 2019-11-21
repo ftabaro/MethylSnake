@@ -12,7 +12,7 @@ fi
 
 LOG_FOLDER=$(grep log_folder "$1" | awk -F":" '{print $2}')
 mkdir -p $LOG_FOLDER
-SBATCH="sbatch -J {cluster.jobname} --partition={cluster.partition} --mem={cluster.mem} --time={cluster.time} --cpus-per-task={threads} -e ${LOG_FOLDER%/}/{cluster.log} -o ${LOG_FOLDER%/}{cluster.log}"
+SBATCH="sbatch -J {cluster.jobname} --partition={cluster.partition} --mem={cluster.mem} --time={cluster.time} --cpus-per-task={threads} -e ${LOG_FOLDER%/}/{cluster.log} -o ${LOG_FOLDER%/}/{cluster.log}"
 
 snakemake -r -p -j 100 --configfile $1 \
     --use-conda \
