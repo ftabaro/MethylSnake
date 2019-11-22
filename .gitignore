@@ -1,3 +1,5 @@
 .snakemake/
 *.png
 *.svg
+singularity/
+

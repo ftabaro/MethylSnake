@@ -45,8 +45,18 @@ rule trim:
     shell:
       """
       OUTPUT=$(dirname {output[0]})
+      BN1=$(basename {output[0]})
+      BN2=$(basename {output[2]})
+      TMPDIR={config[tmp_dir]}
+      TMPDIR=${{TMPDIR%/}}
 
-      trim_galore --quality {params.quality_filter_value} --phred33 --output_dir $OUTPUT --gzip --rrbs --fastqc --fastqc_args "-o \"$OUTPUT\"" --paired --cores {threads} {input}
+      trim_galore --quality {params.quality_filter_value} \
+      --phred33 --output_dir $TMPDIR \
+      --gzip --rrbs --fastqc --fastqc_args "-o \"$OUTPUT\"" \
+      --paired --cores {threads} {input}
+
+      mv $TMPDIR/BN1 $OUTPUT/BN1
+      mv $TMPDIR/BN2 $OUTPUT/BN2
       """
 
 
@@ -69,7 +79,10 @@ rule bismark_align:
       os.path.join(config["log_folder"], "bismark", "{sample}.benchmark.log")
     shell:
       """
-      bismark --phred33-quals --bowtie2 -p {threads} --genome {config[bismark_index_path]} --unmapped --ambiguous --ambig_bam --nucleotide_coverage --output_dir {config[alignments_folder]} --fastq --temp_dir {params[0]} -1 {input[0]} -2 {input[1]}
+      bismark --phred33-quals --bowtie2 -p {threads} \
+        --genome {config[bismark_index_path]} --unmapped --ambiguous \
+        --ambig_bam --nucleotide_coverage --output_dir {config[alignments_folder]} \
+        --fastq --temp_dir {params[0]} -1 {input[0]} -2 {input[1]}
       """
 
 # rule samtools_sort:
@@ -116,7 +129,10 @@ rule methylation_extractor:
     threads: 9
     shell:
       """
-      bismark_methylation_extractor --paired-end --comprehensive --gzip --output {config[alignments_folder]} --multicore $(( {threads} / 3 )) --bedGraph --remove_spaces --buffer_size 80% --cytosine_report --genome_folder $(dirname {config[genome_path]}) --ignore_r2 2 {input[0]}
+      bismark_methylation_extractor --paired-end --comprehensive --gzip \
+      --output {config[alignments_folder]} --multicore $(( {threads} / 3 )) \
+      --bedGraph --remove_spaces --buffer_size 80% --cytosine_report \
+      --genome_folder $(dirname {config[genome_path]}) --ignore_r2 2 {input[0]}
       """
 
 
