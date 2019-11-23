@@ -1,15 +1,19 @@
 library(methylKit)
 
-input_paths <- snakemake@input
+#input_paths <- snakemake@input[[1]]
 methylkitdb_folder <- snakemake@params[["methylkitdb_folder"]]
 methylkit_rdata_path <- snakemake@output[["methylRawObj"]]
 
-sample_sheet <- read.csv(snakemake@input[["sample_sheet"]], header = TRUE)
+sample_sheet <- read.csv(snakemake@input[["sample_sheet"]], header = TRUE, sep=";", stringsAsFactor=FALSE)
 sample.id <- sample_sheet$sample_name
+input_paths <- file.path(snakemake@config[["alignments_folder"]], paste0(sample.id, snakemake@config[["mate1_pattern"]], "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
 treatment <- sample_sheet$treatment
 
-message(sprintf("MethylKit database folder is: %s", methylkitdb_folder))
-methylRawObj <- methRead(input_paths,
+message(sprintf("Input paths (%d - %s): ", length(input_paths), class(input_paths)), paste(input_paths, collapse=", "))
+message(sprintf("Samples ids (%d -  %s): ", length(sample.id), class(sample.id)), paste(sample.id, collapse=", "))
+message(sprintf("Treatment vector (%d - %s): ", length(treatment), class(treatment)), paste(treatment))
+message("MethylKit database folder is: ", methylkitdb_folder)
+methylRawObj <- methRead(as.list(input_paths),
   sample.id=as.list(sample.id),
   assembly="hg19",
   dbtype="tabix",
