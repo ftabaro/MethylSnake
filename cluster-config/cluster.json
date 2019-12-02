@@ -36,5 +36,10 @@
     "make_methylkit_db": {
         "time": "06:00:00",
         "mem": "16G"
+    },
+    "run_methylkit_analysis": {
+        "time": "12:00:00",
+        "mem": "64G",
+        "cpus": 6
     }
 }

@@ -10,17 +10,20 @@ mate2_root = "{sample}" + config["mate2_pattern"]
 rule all:
     message: "all done!"
     input:
-      expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),
+#      expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),
       expand(os.path.join(config["reports_folder"], mate1_root + "_val_1_bismark_bt2_PE_report.html"), sample=config["samples"]),
       os.path.join(config["alignments_folder"], "bismark_summary_report.html"),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
-      expand(os.path.join(config["pictures_folder"], "{sample}_preliminary_stats.pdf"), sample=config["samples"]),
-      os.path.join(config["rdata_folder"], "methylMergedObj.rds"),
-      os.path.join(config["rdata_folder"], "dmr_annotated.rds")
-
+      os.path.join(config["wd"], "methylkit_analysis.done")
 
 # rule fastqc:
+#   message: "Running FastQC..."
+#   input:
+#     expand(os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]), sample = config["samples"]),
+#     expand(os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]), sample = config["samples"])
+#   output:
+#     os.path.join(config["fastqc_folder"],
 # rule multiqc:
 # rule bismark_genome_prep:
 
@@ -45,18 +48,12 @@ rule trim:
     shell:
       """
       OUTPUT=$(dirname {output[0]})
-      BN1=$(basename {output[0]})
-      BN2=$(basename {output[2]})
-      TMPDIR={config[tmp_dir]}
-      TMPDIR=${{TMPDIR%/}}
 
       trim_galore --quality {params.quality_filter_value} \
-      --phred33 --output_dir $TMPDIR \
+      --phred33 --output_dir $OUTPUT \
       --gzip --rrbs --fastqc --fastqc_args "-o \"$OUTPUT\"" \
       --paired --cores {threads} {input}
 
-      mv $TMPDIR/BN1 $OUTPUT/BN1
-      mv $TMPDIR/BN2 $OUTPUT/BN2
       """
 
 
@@ -122,8 +119,8 @@ rule methylation_extractor:
       os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz")
     log:
       os.path.join(config["log_folder"], "bismark_methylation_extractor", "{sample}.log")
-    conda:
-      os.path.join(config["environments_folder"], "rrbs.yaml")
+#    conda:
+#      os.path.join(config["environments_folder"], "rrbs.yaml")
     benchmark:
       os.path.join(config["log_folder"], "bismark_methylation_extractor", "{sample}.benchmark.log")
     threads: 9
@@ -225,7 +222,7 @@ rule convert_gtf_to_bed12:
 #    os.path.join(config["ensembl_root"], config["ensembl_version"], "gtf/homo_sapiens/Homo_sapiens.GRCh37.87.gtf.gz")
     config["annotation_file"]
   output:
-    re.sub("gtf", "bed12", config["annotation_file"])
+    re.sub("gtf.gz$", "bed12", config["annotation_file"])
 #    os.path.join(config["ensembl_root"], config["ensembl_version"], "gtf/homo_sapiens/Homo_sapiens.GRCh37.87.bed12.gz")
   #conda:
   #  os.path.join(config["environments_folder"], "rrbs.yaml")
@@ -236,79 +233,90 @@ rule convert_gtf_to_bed12:
     cd {params.tmp_dir}
     gunzip -c {input} > temp.gtf;
     gtfToGenePred temp.gtf temp.genePred;
-    genePredToBed temp.genePred temp.bed;
-    gzip -c temp.bed > {output};
-    rm temp.gtf temp.genePred temp.bed
+    genePredToBed temp.genePred {output};
+    rm temp.gtf temp.genePred
     """
 
-
-rule make_methylkit_db:
+rule run_methylkit_analysis:
   message:
-    "Generating MethylKit database..."
+    "Performing methylKit analysis..."
   input:
     expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"]),
+    annotation_file=re.sub("gtf.gz", "bed12", config["annotation_file"]),
     sample_sheet=config["sample_sheet"]
   output:
-    methylRawObj=os.path.join(config["rdata_folder"], "methylRawObj.rds"),
-    bgzFiles=expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),
-    plots=expand(os.path.join(config["pictures_folder"], "{sample}_preliminary_stats.pdf"), sample=config["samples"])
-  params:
-    methylkitdb_folder=config["methylkitdb_folder"],
-    pictures_folder=config["pictures_folder"]
-  #conda:
-  ##  os.path.join(config["environments_folder"], "methylkit.yaml")
+    touch(os.path.join(config["wd"], "methylkit_analysis.done"))
   script:
-    "scripts/methylkit/make_db.R"
+    "scripts/methylkit_analysis.R"
 
 
-rule methylkit_merge_samples:
-  message: "Merging samples..."
-  input:
-    methylRawObj=os.path.join(config["rdata_folder"], "methylRawObj.rds"),
-    dbFiles=expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"])
-  output:
-    methylMergedObj=os.path.join(config["rdata_folder"], "methylMergedObj.rds"),
-    correlogram=os.path.join(config["pictures_folder"], "samples_correlation.pdf"),
-    clustering=os.path.join(config["pictures_folder"], "samples_clustering_pca.pdf")
-  #conda:
-  #  os.path.join(config["environments_folder"], "methylkit.yaml")
-  script:
-    "scripts/methylkit/merge_samples.R"
+# rule make_methylkit_db:
+#   message:
+#     "Generating MethylKit database..."
+#   input:
+#     expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"]),
+#     sample_sheet=config["sample_sheet"]
+#   output:
+#     methylRawObj=os.path.join(config["rdata_folder"], "methylRawObj{index}.rds"),
+#     bgzFiles=expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"]),
+#     plots=expand(os.path.join(config["pictures_folder"], "{sample}_preliminary_stats.pdf"), sample=config["samples"])
+#   params:
+#     methylkitdb_folder=config["methylkitdb_folder"],
+#     pictures_folder=config["pictures_folder"]
+#   #conda:
+#   ##  os.path.join(config["environments_folder"], "methylkit.yaml")
+#   script:
+#     "scripts/methylkit/make_db.R"
 
 
-rule methylkit_detect_dmr:
-  message: "Performing tiling windows analysis to detect DMR..."
-  input:
-    methylMergedObj=os.path.join(config["rdata_folder"], "methylMergedObj.rds")
-  output:
-    tileCounts=os.path.join(config["rdata_folder"], "tilesCounts.rds"),
-    dmr=os.path.join(config["rdata_folder"], "dmr.rds"),
-    dmrPerChromosome=os.path.join(config["rdata_folder"], "dmrPerChromosome.rds"),
-    dmrHyper=os.path.join(config["rdata_folder"], "dmrHyper.rds"),
-    dmrHypo=os.path.join(config["rdata_folder"], "dmrHypo.rds"),
-    dmrPerChromosome_plot=os.path.join(config["pictures_folder"], "dmrPerChromosome.pdf")
-  threads: 6
-  params:
-    window_size=config["dmr_window_size"],
-    step_size=config["dmr_step_size"],
-    difference=config["dmr_difference"],
-    qvalue=config["dmr_qvalue"]
-  #conda:
-  #  os.path.join(config["environments_folder"], "methylkit.yaml")
-  script:
-    "scripts/methylkit/detect_dmr.R"
+# rule methylkit_merge_samples:
+#   message: "Merging samples..."
+#   input:
+#     methylRawObj=os.path.join(config["rdata_folder"], "methylRawObj{index}.rds"),
+#     dbFiles=expand(os.path.join(config["methylkitdb_folder"], "{sample}.txt.bgz.tbi"), sample=config["samples"])
+#   output:
+#     methylMergedObj=os.path.join(config["rdata_folder"], "methylMergedObj.rds"),
+#     correlogram=os.path.join(config["pictures_folder"], "samples_correlation.pdf"),
+#     clustering=os.path.join(config["pictures_folder"], "samples_clustering_pca.pdf")
+#   #conda:
+#   #  os.path.join(config["environments_folder"], "methylkit.yaml")
+#   script:
+#     "scripts/methylkit/merge_samples.R"
 
-rule annotate_dmr:
-  input:
-    dmr=os.path.join(config["rdata_folder"], "dmr.rds"),
-#    annotation=os.path.join(config["ensembl_root"], config["ensembl_version"], "gtf/homo_sapiens/Homo_sapiens.GRCh37.87.bed12.gz")
-    annotation=re.sub("gtf", "bed12", config["annotation_file"])
-  output:
-    dmr_annotated=os.path.join(config["rdata_folder"], "dmr_annotated.rds"),
-    gene_part_annotation_plot=os.path.join(config["pictures_folder"], "dmr_annotation.pdf"),
-    tss_association=os.path.join(config["tables_folder"], "tss_association.csv"),
-    genomic_features_percentages=os.path.join(config["tables_folder"], "genomic_features_percentages.txt")
-  #conda:
-  #  os.path.join(config["environments_folder"], "methylkit.yaml")
-  script:
-    "scripts/methylkit/annotate_dmr.R"
+
+# rule methylkit_detect_dmr:
+#   message: "Performing tiling windows analysis to detect DMR..."
+#   input:
+#     methylMergedObj=os.path.join(config["rdata_folder"], "methylMergedObj.rds")
+#   output:
+#     tileCounts=os.path.join(config["rdata_folder"], "tilesCounts.rds"),
+#     dmr=os.path.join(config["rdata_folder"], "dmr.rds"),
+#     dmrPerChromosome=os.path.join(config["rdata_folder"], "dmrPerChromosome.rds"),
+#     dmrHyper=os.path.join(config["rdata_folder"], "dmrHyper.rds"),
+#     dmrHypo=os.path.join(config["rdata_folder"], "dmrHypo.rds"),
+#     dmrPerChromosome_plot=os.path.join(config["pictures_folder"], "dmrPerChromosome.pdf")
+#   threads: 6
+#   params:
+#     window_size=config["dmr_window_size"],
+#     step_size=config["dmr_step_size"],
+#     difference=config["dmr_difference"],
+#     qvalue=config["dmr_qvalue"]
+#   #conda:
+#   #  os.path.join(config["environments_folder"], "methylkit.yaml")
+#   script:
+#     "scripts/methylkit/detect_dmr.R"
+
+# rule annotate_dmr:
+#   input:
+#     dmr=os.path.join(config["rdata_folder"], "dmr.rds"),
+# #    annotation=os.path.join(config["ensembl_root"], config["ensembl_version"], "gtf/homo_sapiens/Homo_sapiens.GRCh37.87.bed12.gz")
+#     annotation=re.sub("gtf", "bed12", config["annotation_file"])
+#   output:
+#     dmr_annotated=os.path.join(config["rdata_folder"], "dmr_annotated.rds"),
+#     gene_part_annotation_plot=os.path.join(config["pictures_folder"], "dmr_annotation.pdf"),
+#     tss_association=os.path.join(config["tables_folder"], "tss_association.csv"),
+#     genomic_features_percentages=os.path.join(config["tables_folder"], "genomic_features_percentages.txt")
+#   #conda:
+#   #  os.path.join(config["environments_folder"], "methylkit.yaml")
+#   script:
+#     "scripts/methylkit/annotate_dmr.R"

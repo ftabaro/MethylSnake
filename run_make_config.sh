@@ -1,0 +1,22 @@
+python scripts/make_config.py \
+  --config-path /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/config.yaml \
+  --wd /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs \
+  --genome-path /bmt-data/genomics/reference/hg19/hg19.fa \
+  --bismark-index-path /bmt-data/genomics/reference/bismark/hg19 \
+  --annotation-file /bmt-data/genomics/reference/Ensembl/grch37/release-97/gtf/homo_sapiens/Homo_sapiens.GRCh37.87.gtf.gz \
+  --sample-sheet /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/sample_sheet.csv \
+  --tmp-folder /scratch/ft413468/glioma_cellline_cfrrbs \
+  --log-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/log \
+  --reads-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/pooled \
+  --trimmed-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/trimmed \
+  --alignments-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/alignments \
+  --reports-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/reports \
+  --nucleotide-stats-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/nucl_stat \
+  --methylkitdb-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/methylkitdb \
+  --rdata-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/Rdata \
+  --pictures-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/pictures \
+  --tables-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/tables \
+  --mate1-pattern _1 \
+  --mate2-pattern _2 \
+  --fastq-extension .fq.gz
+#  --environments-folder /lustre/bmt-data/genomics/projects/glioma_cellline_cfrrbs/rrbs-pipeline/environments
