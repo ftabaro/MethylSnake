@@ -19,3 +19,4 @@ python scripts/make_config.py --config-path /lustre/bmt-data/genomics/projects/R
   --mate2-pattern _R2_001 \
   --fastq-extension .fastq.gz 
 #  --environments-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/rrbs-pipeline/environments 
+
