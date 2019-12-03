@@ -65,59 +65,57 @@ tileCounts_rds_path      <- file.path(rdata_folder, "tilesCounts.rds")
 diffMeth_rds_path        <- file.path(rdata_folder, "methylDiffObj.rds")
 diffMethTiles_rds_path   <- file.path(rdata_folder, "methylDiffTilesObj.rds")
 
-dmr_rds_path      <- file.path(dmr_rdata_folder, "dmr.rds")
-hyperDmr_rds_path <- file.path(dmr_rdata_folder, "hyper.rds")
-hypoDmr_rds_path  <- file.path(dmr_rdata_folder, "hypo.rds")
+dmr_paths <- c(
+  rds_path                        = file.path(dmr_rdata_folder, "dmr.rds"),
+  annotated_rds_path              = file.path(dmr_rdata_folder, "dmr_annotated.rds"),
+  perChr_rds_path                 = file.path(dmr_rdata_folder, "dmrPerChromosome.rds"),
+  gene_part_annotation_plot       = file.path(dmr_pictures_folder, "annotation.pdf"),
+  perChr_plot_path                = file.path(dmr_pictures_folder, "dmrPerChromosome.pdf"),
+  tss_association_table           = file.path(dmr_tables_folder, "dmr_tss_association.csv"),
 
-dmrPerChr_rds_path      <- file.path(dmr_rdata_folder, "dmrPerChromosome.rds")
-hypoDmrPerChr_rds_path  <- file.path(dmr_rdata_folder, "hypoDmrPerChromosome.rds")
-hyperDmrPerChr_rds_path <- file.path(dmr_rdata_folder, "hyperDmrPerChromosome.rds")
+  hyper_rds_path                  = file.path(dmr_rdata_folder, "hyper.rds"),
+  hyper_annotated_rds_path        = file.path(dmr_rdata_folder, "hyper_dmr_annotated.rds"),
+  hyperPerChr_rds_path            = file.path(dmr_rdata_folder, "hyperDmrPerChromosome.rds"),
+  hyper_gene_part_annotation_plot = file.path(dmr_pictures_folder, "hyper_annotation.pdf"),
+  hyperPerChr_plot_path           = file.path(dmr_pictures_folder, "hyperDmrPerChromosome.pdf"),
+  hyper_tss_association_table     = file.path(dmr_tables_folder, "hyperDmr_tss_association.csv"),
 
-dmr_annotated_rds_path      <- file.path(dmr_rdata_folder, "dmr_annotated.rds")
-hypoDmr_annotated_rds_path  <- file.path(dmr_rdata_folder, "hypo_dmr_annotated.rds")
-hyperDmr_annotated_rds_path <- file.path(dmr_rdata_folder, "hyper_dmr_annotated.rds")
+  hypo_rds_path                   = file.path(dmr_rdata_folder, "hypo.rds"),
+  hypo_annotated_rds_path         = file.path(dmr_rdata_folder, "hypo_dmr_annotated.rds"),
+  hypoPerChr_rds_path             = file.path(dmr_rdata_folder, "hypoDmrPerChromosome.rds"),
+  hypo_gene_part_annotation_plot  = file.path(dmr_pictures_folder, "hypo_annotation.pdf"),
+  hypoPerChr_plot_path            = file.path(dmr_pictures_folder, "hypoDmrPerChromosome.pdf"),
+  hypo_tss_association_table      = file.path(dmr_tables_folder, "hypoDmr_tss_association.csv")
 
-dmc_rds_path      <- file.path(dmc_rdata_folder, "dmc.rds")
-hyperDmc_rds_path <- file.path(dmc_rdata_folder, "hyper.rds")
-hypoDmc_rds_path  <- file.path(dmc_rdata_folder, "hypo.rds")
+)
 
-dmcPerChr_rds_path      <- file.path(dmc_rdata_folder, "dmcPerChromosome.rds")
-hypoDmcPerChr_rds_path  <- file.path(dmc_rdata_folder, "hypoDmcPerChromosome.rds")
-hyperDmcPerChr_rds_path <- file.path(dmc_rdata_folder, "hyperDmcPerChromosome.rds")
+dmc_paths <- c(
+  rds_path                        = file.path(dmc_rdata_folder, "dmc.rds"),
+  annotated_rds_path              = file.path(dmc_rdata_folder, "dmc_annotated.rds"),
+  perChr_rds_path                 = file.path(dmc_rdata_folder, "dmcPerChromosome.rds"),
+  gene_part_annotation_plot       = file.path(dmc_pictures_folder, "annotation.pdf"),
+  perChr_plot_path                = file.path(dmc_pictures_folder, "dmcPerChromosome.pdf"),
+  tss_association_table           = file.path(dmc_tables_folder, "dmc_tss_association.csv"),
 
-dmc_annotated_rds_path      <- file.path(dmc_rdata_folder, "dmc_annotated.rds")
-hypoDmc_annotated_rds_path  <- file.path(dmc_rdata_folder, "hypoDmc_annotated.rds")
-hyperDmc_annotated_rds_path <- file.path(dmc_rdata_folder, "hyperDmc_annotated.rds")
+  hyper_rds_path                  = file.path(dmc_rdata_folder, "hyper.rds"),
+  hyper_annotated_rds_path        = file.path(dmc_rdata_folder, "hyper_dmc_annotated.rds"),
+  hyperPerChr_rds_path            = file.path(dmc_rdata_folder, "hyperDmcPerChromosome.rds"),
+  hyper_gene_part_annotation_plot = file.path(dmc_pictures_folder, "hyper_annotation.pdf"),
+  hyperPerChr_plot_path           = file.path(dmc_pictures_folder, "hyperDmcPerChromosome.pdf"),
+  hyper_tss_association_table     = file.path(dmc_tables_folder, "hyperDmc_tss_association.csv"),
 
+  hypo_rds_path                   = file.path(dmc_rdata_folder, "hypo.rds"),
+  hypo_annotated_rds_path         = file.path(dmc_rdata_folder, "hypo_dmc_annotated.rds"),
+  hypoPerChr_rds_path             = file.path(dmc_rdata_folder, "hypoDmcPerChromosome.rds"),
+  hypo_gene_part_annotation_plot  = file.path(dmc_pictures_folder, "hypo_annotation.pdf"),
+  hypoPerChr_plot_path            = file.path(dmc_pictures_folder, "hypoDmcPerChromosome.pdf"),
+  hypo_tss_association_table      = file.path(dmc_tables_folder, "hypoDmc_tss_association.csv")
+
+)
 
 # plot paths
-correlogram_path              <- file.path(pictures_folder, "samples_correlation.pdf")
-clustering_path               <- file.path(pictures_folder, "samples_clustering_pca.pdf")
-
-dmr_gene_part_annotation_plot       <- file.path(dmr_pictures_folder, "annotation.pdf")
-hypoDmr_gene_part_annotation_plot  <- file.path(dmr_pictures_folder, "hypo_annotation.pdf")
-hyperDmr_gene_part_annotation_plot <- file.path(dmr_pictures_folder, "hyper_annotation.pdf")
-
-dmrPerChr_plot_path       <- file.path(dmr_pictures_folder, "dmrPerChromosome.pdf")
-hypoDmrPerChr_plot_path  <- file.path(dmr_pictures_folder, "hypoDmrPerChromosome.pdf")
-hyperDmrPerChr_plot_path <- file.path(dmr_pictures_folder, "hyperDmrPerChromosome.pdf")
-
-dmc_gene_part_annotation_plot       <- file.path(dmc_pictures_folder, "annotation.pdf")
-hypoDmc_gene_part_annotation_plot  <- file.path(dmc_pictures_folder, "hypo_annotation.pdf")
-hyperDmc_gene_part_annotation_plot <- file.path(dmc_pictures_folder, "hyper_annotation.pdf")
-
-dmcPerChr_plot_path       <- file.path(dmc_pictures_folder, "dmcPerChromosome.pdf")
-hypoDmcPerChr_plot_path  <- file.path(dmc_pictures_folder, "hypoDmcPerChromosome.pdf")
-hyperDmcPerChr_plot_path <- file.path(dmc_pictures_folder, "hyperDmcPerChromosome.pdf")
-
-# table paths
-dmr_tss_association_table      <- file.path(dmr_tables_folder, "dmr_tss_association.csv")
-hypoDmr_tss_association_table  <- file.path(dmr_tables_folder, "hypoDmr_tss_association.csv")
-hyperDmr_tss_association_table <- file.path(dmr_tables_folder, "hyperDmr_tss_association.csv")
-
-dmc_tss_association_table      <- file.path(dmc_tables_folder, "dmc_tss_association.csv")
-hypoDmc_tss_association_table  <- file.path(dmc_tables_folder, "hypoDmc_tss_association.csv")
-hyperDmc_tss_association_table <- file.path(dmc_tables_folder, "hyperDmc_tss_association.csv")
+correlogram_path <- file.path(pictures_folder, "samples_correlation.pdf")
+clustering_path  <- file.path(pictures_folder, "samples_clustering_pca.pdf")
 
 
 
@@ -223,61 +221,6 @@ compute_tiles <- function(methylMergedObj, ws = window_size, ss = step_size, .ti
 
 
 
-call_dmr <- function(diffMeth, .dmr_rds_path = dmr_rds_path, .dmrPerChr_rds_path = dmrPerChr_rds_path, .dmrPerChr_plot_path = dmrPerChr_plot_path, direction=NULL){
-
-    if (is.null(direction)){
-      direction <- "all"
-    }
-
-    dmr <- getMethylDiff(diffMeth,
-      difference=diff,
-      qvalue=qvalue,
-      type=direction)
-    saveRDS(dmr, .dmr_rds_path)
-
-    dmrPerChr <- diffMethPerChr(diffMeth, plot = FALSE,
-      qvalue.cutoff=qvalue, meth.cutoff=diff )
-    saveRDS(dmrPerChr, .dmrPerChr_rds_path)
-
-    chroms <- levels(seqnames(as(diffMeth, "GRanges")))
-    exclude <- as.factor(grep("_", chroms, value = TRUE))
-
-    pdf(.dmrPerChr_plot_path)
-    diffMethPerChr(diffMeth, plot = TRUE,
-      qvalue.cutoff=qvalue,
-      meth.cutoff=diff,
-      exclude = exclude)
-    dev.off()
-
-    message("DMR computation complete")
-    return(dmr)
-}
-
-
-
-annotate <- function(diffMeth, .dmr_annotated_rds_path = dmr_annotated_rds_path, .gene_part_annotation_plot = gene_part_annotation_plot, .tss_association_table = tss_association_table){
-
-    dmr_gr <- as(diffMeth, "GRanges")
-
-    seqlevels(dmr_gr, pruning.mode="coarse") <- seqlevels(gene.obj)
-
-    annotated <- annotateWithGeneParts(dmr_gr, gene.obj)
-    saveRDS(annotated, .dmr_annotated_rds_path)
-
-    pdf(.gene_part_annotation_plot)
-    plotTargetAnnotation(annotated,
-      precedence = TRUE,
-      main="Annotation of DMRs")
-    dev.off()
-
-    tbl <- getAssociationWithTSS(annotated)
-    write.csv(tbl, file=.tss_association_table)
-
-    message("Annotation complete.")
-}
-
-
-
 add_number_to_path <- function(path, i) {
   sub("(.*)\\.(.*)$", sprintf("\\1\\.%d.\\2", i), path)
 }
@@ -289,20 +232,50 @@ diff_meth_analysis <- function (methDiffObj,
   dmr_annotated_path, gene_part_annot_plot, tss_association,
   direction = "all") {
 
-  dmr <- call_dmr(methDiffObj,
-    direction = direction,
-    .dmr_rds_path = dmr_path,
-    .dmrPerChr_rds_path = dmrPerChr_path,
-    .dmrPerChr_plot_path = dmrPerChr_plot)
+  if (is.null(direction)){
+    direction <- "all"
+  }
 
+  dmr <- getMethylDiff(methDiffObj,
+    difference=diff,
+    qvalue=qvalue,
+    type=direction)
+  saveRDS(dmr, dmr_path)
 
-  annotate(dmr,
-    .dmr_annotated_rds_path = dmr_annotated_path,
-    .gene_part_annotation_plot = gene_part_annot_plot,
-    .tss_association_table = tss_association)
+  dmrPerChr <- diffMethPerChr(methDiffObj, plot = FALSE,
+    qvalue.cutoff=qvalue, meth.cutoff=diff )
+  saveRDS(dmrPerChr, dmrPerChr_path)
+
+  chroms <- levels(seqnames(as(methDiffObj, "GRanges")))
+  exclude <- as.factor(grep("_", chroms, value = TRUE))
+
+  pdf(dmrPerChr_plot)
+  diffMethPerChr(methDiffObj, plot = TRUE,
+    qvalue.cutoff=qvalue,
+    meth.cutoff=diff,
+    exclude = exclude)
+  dev.off()
+
+  message("Differential methylation analysis complete.")
+
+  dmr_gr <- as(dmr, "GRanges")
+
+  seqlevels(dmr_gr, pruning.mode="coarse") <- seqlevels(gene.obj)
+
+  annotated <- annotateWithGeneParts(dmr_gr, gene.obj)
+  saveRDS(annotated, dmr_annotated_path)
+
+  pdf(gene_part_annot_plot)
+  plotTargetAnnotation(annotated,
+    precedence = TRUE,
+    main="Annotation of DMRs")
+  dev.off()
+
+  tbl <- getAssociationWithTSS(annotated)
+  write.csv(tbl, file=tss_association)
+
+  message("Annotation complete.")
 }
-
-
 
 compute_diffMeth <- function(methylMergedObj, diffMethObj_rds_path = diffMeth_rds_path) {
 
@@ -314,6 +287,34 @@ compute_diffMeth <- function(methylMergedObj, diffMethObj_rds_path = diffMeth_rd
 
     message("DiffMeth object computed.")
     return(diffMeth)
+}
+
+do_diff_meth_analysis <- function(diffMethObj, path_vector) {
+
+  diff_meth_analysis(diffMeth,
+    dmr_path = path_vector["rds_path"],
+    dmrPerChr_path = path_vector["perChr_rds_path"],
+    dmrPerChr_plot = path_vector["perChr_plot_path"],
+    dmr_annotated_path = path_vector["annotated_rds_path"],
+    gene_part_annot_plot = path_vector["gene_part_annotation_plot"],
+    tss_association = path_vector["tss_association_table"])
+
+  diff_meth_analysis(diffMeth, direction="hypo",
+    dmr_path = path_vector["hypo_rds_path"],
+    dmrPerChr_path = path_vector["hypoPerChr_rds_path"],
+    dmrPerChr_plot = path_vector["hypoPerChr_plot_path"],
+    dmr_annotated_path = path_vector["hypo_annotated_rds_path"],
+    gene_part_annot_plot = path_vector["hypo_gene_part_annotation_plot"],
+    tss_association = path_vector["hypo_tss_association_table"])
+
+  diff_meth_analysis(diffMeth, direction="hyper",
+    dmr_path = path_vector["hyper_rds_path"],
+    dmrPerChr_path = path_vector["hyperPerChr_rds_path"],
+    dmrPerChr_plot = path_vector["hyperPerChr_plot_path"],
+    dmr_annotated_path = path_vector["hyper_annotated_rds_path"],
+    gene_part_annot_plot = path_vector["hyper_gene_part_annotation_plot"],
+    tss_association = path_vector["hyper_tss_association_table"])
+
 }
 
 
@@ -338,6 +339,18 @@ if (length(treatment_levels) > 2) {
         cur_treatment <- as.numeric(cur_treatment != 0)
         cur_sample_id <- subset(sample_sheet, treatment %in% c(0,i))$sample_name
 
+        cur_methylRawObj_rds_path    <- add_number_to_path(methylRawObj_rds_path, i)
+        cur_methylMergedObj_rds_path <- add_number_to_path(methylMergedObj_rds_path, i)
+        cur_correlogram_path         <- add_number_to_path(correlogram_path, i)
+        cur_clustering_path          <- add_number_to_path(clustering_path, i)
+        cur_diffMeth_rds_path        <- add_number_to_path(diffMeth_rds_path, i)
+        cur_tileCounts_rds_path      <- add_number_to_path(tileCounts_rds_path, i)
+        cur_diffMethTiles_rds_path   <- add_number_to_path(diffMethTiles_rds_path, i)
+
+        cur_dmc_paths <- sapply(seq_along(dmc_paths), function(i) add_number_to_path(dmc_paths[i], i))
+        cur_dmr_paths <- sapply(seq_along(dmr_paths), function(i) add_number_to_path(dmr_paths[i], i))
+
+
         message(sprintf("Using %s as treatment and %s as control.",
           paste(cur_sample_id[cur_treatment == 1], collapse=", "),
           paste(cur_sample_id[cur_treatment == 0], collapse=", ")))
@@ -345,104 +358,33 @@ if (length(treatment_levels) > 2) {
         cur_input_paths <- file.path(alignments_folder, paste0(cur_sample_id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
 
         methylRawObj <- make_methylkitdb_object(cur_input_paths,
-          cur_sample_id,
-          cur_treatment,
-          methylRawObj_rds_path = add_number_to_path(methylRawObj_rds_path, i),
+          cur_sample_id, cur_treatment,
+          methylRawObj_rds_path = cur_methylRawObj_rds_path,
           .methylkitdb_folder = methylkitdb_folder)
 
         methylMergedObj <- merge_methylRawObj(methylRawObj,
-          .methylMergedObj_rds_path = add_number_to_path(methylMergedObj_rds_path, i),
-          .correlogram_path = add_number_to_path(correlogram_path, i),
-          .clustering_path = add_number_to_path(clustering_path, i))
+          .methylMergedObj_rds_path = cur_methylMergedObj_rds_path,
+          .correlogram_path = cur_correlogram_path,
+          .clustering_path = cur_clustering_path)
 
-        diffMeth <- compute_diffMeth(methylMergedObj,
-          diffMethObj_rds_path = add_number_to_path(diffMeth_rds_path, i))
+        diffMeth <- compute_diffMeth(methylMergedObj, diffMethObj_rds_path = cur_diffMeth_rds_path)
+
 
         #########
         ## DMC ##
         #########
 
-        diff_meth_analysis(diffMeth,
-          dmr_path = add_number_to_path(dmc_rds_path, i),
-          dmrPerChr_path = add_number_to_path(dmcPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(dmcPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(dmc_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(dmc_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(dmc_tss_association_table, i))
-
-
-        ##############
-        ## Hypo DMC ##
-        ##############
-
-        diff_meth_analysis(diffMeth,
-          direction="hypo",
-          dmr_path = add_number_to_path(hypoDmc_rds_path, i),
-          dmrPerChr_path = add_number_to_path(hypoDmcPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(hypoDmcPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(hypoDmc_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(hypoDmc_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(hypoDmc_tss_association_table, i))
-
-
-        ###############
-        ## Hyper DMC ##
-        ###############
-
-        diff_meth_analysis(diffMeth,
-          direction="hyper",
-          dmr_path = add_number_to_path(hyperDmc_rds_path, i),
-          dmrPerChr_path = add_number_to_path(hyperDmcPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(hyperDmcPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(hyperDmc_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(hyperDmc_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(hyperDmc_tss_association_table, i))
-
-
+        do_diff_meth_analysis(diffMeth, cur_dmc_paths)
 
         #########
         ## DMR ##
         #########
 
-        tiles <- compute_tiles(methylMergedObj,
-          .tileCounts_rds_path = add_number_to_path(tileCounts_rds_path, i))
+        tiles <- compute_tiles(methylMergedObj, .tileCounts_rds_path = cur_tileCounts_rds_path)
 
-        diffMethTiles <- compute_diffMeth(tiles,
-          diffMethObj_rds_path = add_number_to_path(diffMethTiles_rds_path, i))
+        diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = cur_diffMethTiles_rds_path)
 
-        diff_meth_analysis(diffMethTiles,
-          dmr_path = add_number_to_path(dmr_rds_path, i),
-          dmrPerChr_path = add_number_to_path(dmrPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(dmrPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(dmr_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(dmr_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(dmr_tss_association_table, i))
-
-        ##############
-        ## Hypo DMR ##
-        ##############
-
-        diff_meth_analysis(diffMethTiles,
-          direction="hypo",
-          dmr_path = add_number_to_path(hypoDmr_rds_path, i),
-          dmrPerChr_path = add_number_to_path(hypoDmrPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(hypoDmrPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(hypoDmr_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(hypoDmr_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(hypoDmr_tss_association_table, i))
-
-        ###############
-        ## Hyper DMR ##
-        ###############
-
-        diff_meth_analysis(diffMethTiles,
-          direction="hyper",
-          dmr_path = add_number_to_path(hyperDmr_rds_path, i),
-          dmrPerChr_path = add_number_to_path(hyperDmrPerChr_rds_path, i),
-          dmrPerChr_plot = add_number_to_path(hyperDmrPerChr_plot_path, i),
-          dmr_annotated_path = add_number_to_path(hyperDmr_annotated_rds_path, i),
-          gene_part_annot_plot = add_number_to_path(hyperDmr_gene_part_annotation_plot, i),
-          tss_association = add_number_to_path(hyperDmr_tss_association_table, i))
+        do_diff_meth_analysis(diffMethTiles, cur_dmr_paths)
 
     }
 
@@ -451,48 +393,13 @@ if (length(treatment_levels) > 2) {
     methylRawObj <- make_methylkitdb_object(input_paths, sample.id, treatment, methylRawObj_rds_path)
     methylMergedObj <- merge_methylRawObj(methylRawObj)
 
-    diffMeth <- compute_diffMeth(methylMergedObj,
-      diffMethObj_rds_path = add_number_to_path(diffMeth_rds_path, i))
+    diffMeth <- compute_diffMeth(methylMergedObj)
 
     #########
     ## DMC ##
     #########
 
-    diff_meth_analysis(diffMeth,
-      dmr_path = dmc_rds_path,
-      dmrPerChr_path = dmcPerChr_rds_path,
-      dmrPerChr_plot = dmcPerChr_plot_path,
-      dmr_annotated_path = dmc_annotated_rds_path,
-      gene_part_annot_plot = dmc_gene_part_annotation_plot,
-      tss_association = dmc_tss_association_table)
-
-    ##############
-    ## Hypo DMC ##
-    ##############
-
-    diff_meth_analysis(diffMeth,
-      direction="hypo",
-      dmr_path = hypoDmc_rds_path,
-      dmrPerChr_path = hypoDmcPerChr_rds_path,
-      dmrPerChr_plot = hypoDmcPerChr_plot_path,
-      dmr_annotated_path = hypoDmc_annotated_rds_path,
-      gene_part_annot_plot = hypoDmc_gene_part_annotation_plot,
-      tss_association = hypoDmc_tss_association_table)
-
-    ###############
-    ## Hyper DMC ##
-    ###############
-
-    diff_meth_analysis(diffMeth,
-      direction="hyper",
-      dmr_path = hyperDmc_rds_path,
-      dmrPerChr_path = hyperDmcPerChr_rds_path,
-      dmrPerChr_plot = hyperDmcPerChr_plot_path,
-      dmr_annotated_path = hyperDmc_annotated_rds_path,
-      gene_part_annot_plot = hyperDmc_gene_part_annotation_plot,
-      tss_association = hyperDmc_tss_association_table)
-
-
+    do_diff_meth_analysis(diffMeth, dmc_paths)
 
     #########
     ## DMR ##
@@ -500,42 +407,9 @@ if (length(treatment_levels) > 2) {
 
     tiles <- compute_tiles(methylMergedObj)
 
-    diffMethTiles <- compute_diffMeth(tiles,
-      diffMethObj_rds_path = add_number_to_path(diffMethTiles_rds_path, i))
+    diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = diffMethTiles_rds_path)
 
-    diff_meth_analysis(tiles,
-      dmr_path = dmr_rds_path,
-      dmrPerChr_path = dmrPerChr_rds_path,
-      dmrPerChr_plot = dmrPerChr_plot_path,
-      dmr_annotated_path = dmr_annotated_rds_path,
-      gene_part_annot_plot = dmr_gene_part_annotation_plot,
-      tss_association = dmr_tss_association_table)
-
-    ##############
-    ## Hypo DMR ##
-    ##############
-
-    diff_meth_analysis(tiles,
-      direction="hypo",
-      dmr_path = hypoDmr_rds_path,
-      dmrPerChr_path = hypoDmrPerChr_rds_path,
-      dmrPerChr_plot = hypoDmrPerChr_plot_path,
-      dmr_annotated_path = hypoDmr_annotated_rds_path,
-      gene_part_annot_plot = hypoDmr_gene_part_annotation_plot,
-      tss_association = hypoDmr_tss_association_table)
-
-    ###############
-    ## Hyper DMR ##
-    ###############
-
-    diff_meth_analysis(tiles,
-      direction="hyper",
-      dmr_path = hyperDmr_rds_path,
-      dmrPerChr_path = hyperDmrPerChr_rds_path,
-      dmrPerChr_plot = hyperDmrPerChr_plot_path,
-      dmr_annotated_path = hyperDmr_annotated_rds_path,
-      gene_part_annot_plot = hyperDmr_gene_part_annotation_plot,
-      tss_association = hyperDmr_tss_association_table)
+    do_diff_meth_analysis(diffMethTiles, dmr_paths)
 
 }
 
