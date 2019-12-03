@@ -39,7 +39,7 @@
     },
     "run_methylkit_analysis": {
         "time": "12:00:00",
-        "mem": "64G",
+        "mem": "60G",
         "cpus": 6
     }
 }

@@ -77,7 +77,7 @@ dmr_annotated_rds_path      <- file.path(dmr_rdata_folder, "dmr_annotated.rds")
 hypoDmr_annotated_rds_path  <- file.path(dmr_rdata_folder, "hypo_dmr_annotated.rds")
 hyperDmr_annotated_rds_path <- file.path(dmr_rdata_folder, "hyper_dmr_annotated.rds")
 
-dmc_rds_path       <- file.path(dmc_rdata_folder, "dmc.rds")
+dmc_rds_path      <- file.path(dmc_rdata_folder, "dmc.rds")
 hyperDmc_rds_path <- file.path(dmc_rdata_folder, "hyper.rds")
 hypoDmc_rds_path  <- file.path(dmc_rdata_folder, "hypo.rds")
 
@@ -176,6 +176,7 @@ make_methylkitdb_object <- function (input_paths, sample.id, treatment, methylRa
 
   }
 
+  message("MethylRawObj successfully computed.")
   return(methylRawObj)
 }
 
@@ -197,6 +198,7 @@ merge_methylRawObj <- function(methylRawObj, .methylMergedObj_rds_path = methylM
     PCASamples(meth, screeplot=TRUE)
     dev.off()
 
+    message("Merging complete.")
     return(meth)
 }
 
@@ -215,6 +217,7 @@ compute_tiles <- function(methylMergedObj, ws = window_size, ss = step_size, .ti
     mc.cores=threads)
 
   saveRDS(tiles, .tileCounts_rds_path)
+  message("Tiling completed.")
   return(tiles)
 }
 
@@ -226,7 +229,10 @@ call_dmr <- function(diffMeth, .dmr_rds_path = dmr_rds_path, .dmrPerChr_rds_path
       direction <- "all"
     }
 
-    dmr <- getMethylDiff(diffMeth, difference=diff, qvalue=qvalue,type=direction)
+    dmr <- getMethylDiff(diffMeth,
+      difference=diff,
+      qvalue=qvalue,
+      type=direction)
     saveRDS(dmr, .dmr_rds_path)
 
     dmrPerChr <- diffMethPerChr(diffMeth, plot = FALSE,
@@ -238,12 +244,15 @@ call_dmr <- function(diffMeth, .dmr_rds_path = dmr_rds_path, .dmrPerChr_rds_path
 
     pdf(.dmrPerChr_plot_path)
     diffMethPerChr(diffMeth, plot = TRUE,
-      qvalue.cutoff=qvalue, meth.cutoff=diff,
+      qvalue.cutoff=qvalue,
+      meth.cutoff=diff,
       exclude = exclude)
     dev.off()
 
+    message("DMR computation complete")
     return(dmr)
 }
+
 
 
 annotate <- function(diffMeth, .dmr_annotated_rds_path = dmr_annotated_rds_path, .gene_part_annotation_plot = gene_part_annotation_plot, .tss_association_table = tss_association_table){
@@ -255,15 +264,16 @@ annotate <- function(diffMeth, .dmr_annotated_rds_path = dmr_annotated_rds_path,
     annotated <- annotateWithGeneParts(dmr_gr, gene.obj)
     saveRDS(annotated, .dmr_annotated_rds_path)
 
-    # p <- getTargetAnnotationStats(annotated, percentage=TRUE, precedence=TRUE)
-    # message(p, file = snakemake@output[["genomic_features_percentages"]])
-
     pdf(.gene_part_annotation_plot)
-    plotTargetAnnotation(annotated, precedence = TRUE, main="Annotation of DMRs")
+    plotTargetAnnotation(annotated,
+      precedence = TRUE,
+      main="Annotation of DMRs")
     dev.off()
 
     tbl <- getAssociationWithTSS(annotated)
     write.csv(tbl, file=.tss_association_table)
+
+    message("Annotation complete.")
 }
 
 
@@ -284,13 +294,26 @@ diff_meth_analysis <- function (methDiffObj,
     .dmr_rds_path = dmr_path,
     .dmrPerChr_rds_path = dmrPerChr_path,
     .dmrPerChr_plot_path = dmrPerChr_plot)
-  }
+
 
   annotate(dmr,
     .dmr_annotated_rds_path = dmr_annotated_path,
     .gene_part_annotation_plot = gene_part_annot_plot,
     .tss_association_table = tss_association)
+}
 
+
+
+compute_diffMeth <- function(methylMergedObj, diffMethObj_rds_path = diffMeth_rds_path) {
+
+    diffMeth <- calculateDiffMeth(methylMergedObj,
+      overdispersion="MN",
+      test="Chisq",
+      mc.cores=threads)
+    saveRDS(diffMeth, diffMethObj_rds_path)
+
+    message("DiffMeth object computed.")
+    return(diffMeth)
 }
 
 
@@ -332,13 +355,8 @@ if (length(treatment_levels) > 2) {
           .correlogram_path = add_number_to_path(correlogram_path, i),
           .clustering_path = add_number_to_path(clustering_path, i))
 
-        diffMeth <- calculateDiffMeth(methylMergedObj,
-          overdispersion="MN",
-          test="Chisq",
-          mc.cores=threads)
-        saveRDS(diffMeth, add_number_to_path(diffMeth_rds_path, i))
-
-
+        diffMeth <- compute_diffMeth(methylMergedObj,
+          diffMethObj_rds_path = add_number_to_path(diffMeth_rds_path, i))
 
         #########
         ## DMC ##
@@ -389,11 +407,8 @@ if (length(treatment_levels) > 2) {
         tiles <- compute_tiles(methylMergedObj,
           .tileCounts_rds_path = add_number_to_path(tileCounts_rds_path, i))
 
-        diffMethTiles <- calculateDiffMeth(tiles,
-          overdispersion="MN",
-          test="Chisq",
-          mc.cores=threads)
-        saveRDS(diffMethTiles, add_number_to_path(diffMethTiles_rds_path, i))
+        diffMethTiles <- compute_diffMeth(tiles,
+          diffMethObj_rds_path = add_number_to_path(diffMethTiles_rds_path, i))
 
         diff_meth_analysis(diffMethTiles,
           dmr_path = add_number_to_path(dmr_rds_path, i),
@@ -436,13 +451,8 @@ if (length(treatment_levels) > 2) {
     methylRawObj <- make_methylkitdb_object(input_paths, sample.id, treatment, methylRawObj_rds_path)
     methylMergedObj <- merge_methylRawObj(methylRawObj)
 
-    diffMeth <- calculateDiffMeth(methylMergedObj,
-      overdispersion="MN",
-      test="Chisq",
-      mc.cores=threads)
-
-    saveRDS(diffMeth, diffMeth_rds_path)
-
+    diffMeth <- compute_diffMeth(methylMergedObj,
+      diffMethObj_rds_path = add_number_to_path(diffMeth_rds_path, i))
 
     #########
     ## DMC ##
@@ -490,12 +500,8 @@ if (length(treatment_levels) > 2) {
 
     tiles <- compute_tiles(methylMergedObj)
 
-    diffMethTiles <- calculateDiffMeth(tiles,
-      overdispersion="MN",
-      test="Chisq",
-      mc.cores=threads)
-    saveRDS(diffMethTiles, diffMethTiles_rds_path)
-
+    diffMethTiles <- compute_diffMeth(tiles,
+      diffMethObj_rds_path = add_number_to_path(diffMethTiles_rds_path, i))
 
     diff_meth_analysis(tiles,
       dmr_path = dmr_rds_path,
