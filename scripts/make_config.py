@@ -59,7 +59,7 @@ def make_parser():
     parser.add_argument("--alignments-folder", default="alignments", help="Path to a folder to write alignments in")
     parser.add_argument("--reports-folder", default="reports", help="Path to a folder to write Bismark reports in")
     parser.add_argument("--nucleotide-stats-folder", default="nucleotide_stats", help="Path to write Bismark nucleotide report files in")
-    parser.add_argument("--methylkitdb-folder", default="methylDB", help="Path to write methylKit tabix files in")
+    parser.add_argument("--methylkitdb-folder", default="NULL", help="Path to write methylKit tabix files in")
     parser.add_argument("--rdata-folder", default="RData", help="Path to write RDS objects used in methylKit analysis")
     parser.add_argument("--pictures-folder", default="pictures", help="Path to a folder to write plots in")
     parser.add_argument("--tables-folder", default="tables", help="Path to a folder to write tables in")
@@ -67,6 +67,7 @@ def make_parser():
     parser.add_argument("--dmr-step-size", default=500, help="Step size for tiled differential methylation analysis")
     parser.add_argument("--dmr-difference", default=25, help="Difference in reads coverage threshold for differential methylation analysis")
     parser.add_argument("--dmr-qvalue", default=0.01, help="Q-value threshold for differential methylation analysis")
+    parser.add_argument("--min-per-group", default=1, help="An integer denoting minimum number of samples per replicate needed to cover a region/base")
 
     parser.add_argument("--mate1-pattern", default="_1", help="Pattern to identify mate 1 in paired sequencing files")
     parser.add_argument("--mate2-pattern", default="_2", help="Pattern to identify mate 2 in paired sequencing files")
@@ -85,6 +86,8 @@ def validate_args(args):
             args[k] = os.path.abspath(args[k])
 
     for k in ["tmp_folder", "log_folder", "reads_folder", "trimmed_folder", "alignments_folder", "reports_folder", "nucleotide_stats_folder", "methylkitdb_folder", "rdata_folder", "pictures_folder", "tables_folder"]:
+        if args[k] == "NULL":
+            continue
         if not os.path.isabs(args[k]):
             #args[k] = os.path.join(args["wd"], args[k])
             args[k] = os.path.abspath(args[k])

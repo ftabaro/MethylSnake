@@ -11,7 +11,6 @@ python scripts/make_config.py --config-path /lustre/bmt-data/genomics/projects/R
   --alignments-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/alignments \
   --reports-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/reports \
   --nucleotide-stats-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/nucl_stat \
-  --methylkitdb-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/methylkitdb \
   --rdata-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/Rdata \
   --pictures-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/pictures \
   --tables-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/tables \
@@ -19,4 +18,5 @@ python scripts/make_config.py --config-path /lustre/bmt-data/genomics/projects/R
   --mate2-pattern _R2_001 \
   --fastq-extension .fastq.gz 
 #  --environments-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/rrbs-pipeline/environments 
+#  --methylkitdb-folder /lustre/bmt-data/genomics/projects/RRBSdata_190047_Sharma/methylkitdb \
 
