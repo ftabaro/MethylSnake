@@ -294,7 +294,7 @@ diff_meth_analysis <- function (methDiffObj,
   message("Differential methylation analysis complete.")
 
   if(nrow(dmr) > 0){
-    message(sprintf("Detected %d DMR (type = %s).", nrow(dmr), type))
+    message(sprintf("Detected %d DMR (type = %s).", nrow(dmr), direction))
 
     dmr_gr <- as(dmr, "GRanges")
 
@@ -312,7 +312,7 @@ diff_meth_analysis <- function (methDiffObj,
     tbl <- getAssociationWithTSS(annotated)
     write.csv(tbl, file=tss_association)
 
-    cat(tbl, "\n")
+    # cat(tbl, "\n")
     message("Annotation complete.")
   } else {
     warning("NO DMR TO ANNOTATE")
@@ -335,7 +335,7 @@ compute_diffMeth <- function(methylMergedObj, diffMethObj_rds_path = diffMeth_rd
 
 do_diff_meth_analysis <- function(diffMethObj, path_vector) {
 
-  diff_meth_analysis(diffMeth,
+  diff_meth_analysis(diffMethObj,
     dmr_path = path_vector["rds_path"],
     dmrPerChr_path = path_vector["perChr_rds_path"],
     dmrPerChr_plot = path_vector["perChr_plot_path"],
@@ -343,7 +343,7 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
     gene_part_annot_plot = path_vector["gene_part_annotation_plot"],
     tss_association = path_vector["tss_association_table"])
 
-  diff_meth_analysis(diffMeth, direction="hypo",
+  diff_meth_analysis(diffMethObj, direction="hypo",
     dmr_path = path_vector["hypo_rds_path"],
     dmrPerChr_path = path_vector["hypoPerChr_rds_path"],
     dmrPerChr_plot = path_vector["hypoPerChr_plot_path"],
@@ -351,7 +351,7 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
     gene_part_annot_plot = path_vector["hypo_gene_part_annotation_plot"],
     tss_association = path_vector["hypo_tss_association_table"])
 
-  diff_meth_analysis(diffMeth, direction="hyper",
+  diff_meth_analysis(diffMethObj, direction="hyper",
     dmr_path = path_vector["hyper_rds_path"],
     dmrPerChr_path = path_vector["hyperPerChr_rds_path"],
     dmrPerChr_plot = path_vector["hyperPerChr_plot_path"],
