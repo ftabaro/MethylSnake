@@ -293,8 +293,8 @@ diff_meth_analysis <- function (methDiffObj,
 
   message("Differential methylation analysis complete.")
 
-  if(dmr@num.records > 0){
-    message(sprintf("Detected %d DMR (type = %s).", dmr@num.records, type))
+  if(nrow(dmr) > 0){
+    message(sprintf("Detected %d DMR (type = %s).", nrow(dmr), type))
 
     dmr_gr <- as(dmr, "GRanges")
 
