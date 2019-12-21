@@ -19,10 +19,9 @@ rule all:
 rule fastqc:
     message: "Running FastQC..."
     input:
-    expand(os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]), sample = config["samples"]) + expand(os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]), sample = config["samples"])
+        expand(os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]), sample = config["samples"]) + expand(os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]), sample = config["samples"])
     output:
-        expand(os.path.join(config["fastqc_folder"], mate1_root.replace(config["mate1_pattern"], "_fastqc.zip")), samples=config["samples"]),
-        expand(os.path.join(config["fastqc_folder"], mate2_root.replace(config["mate2_pattern"], "_fastqc.zip")), samples=config["samples"]),
+        touch(os.path.join(config["wd"], "fastqc.done"))
     threads: 6
     shell:
         """
