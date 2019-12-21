@@ -361,6 +361,18 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
 
 }
 
+export_bed <- function(paths) {
+    for (p in paths) {
+        bnp <- basename(p)
+        obj <- readRDS(p)
+        gr <- as(obj, "GRanges")
+        bed_path <- file.path(bed_folder, sub("rds", "bed", bnp))
+        export(gr, con = bed_path, format = "BED")
+        message("%s exported to %s", bnp, bed_path)
+    }
+}
+
+
 
 
 ########
@@ -419,6 +431,7 @@ if (length(treatment_levels) > 2) {
         #########
 
         do_diff_meth_analysis(diffMeth, cur_dmc_paths)
+        export_bed(cur_dmc_paths)
 
         #########
         ## DMR ##
@@ -429,6 +442,7 @@ if (length(treatment_levels) > 2) {
         diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = cur_diffMethTiles_rds_path)
 
         do_diff_meth_analysis(diffMethTiles, cur_dmr_paths)
+        export_bed(cur_dmr_paths)
 
     }
 
@@ -444,6 +458,7 @@ if (length(treatment_levels) > 2) {
     #########
 
     do_diff_meth_analysis(diffMeth, dmc_paths)
+    export_bed(cur_dmc_paths)
 
     #########
     ## DMR ##
@@ -454,6 +469,7 @@ if (length(treatment_levels) > 2) {
     diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = diffMethTiles_rds_path)
 
     do_diff_meth_analysis(diffMethTiles, dmr_paths)
+    export_bed(cur_dmr_paths)
 
 }
 
