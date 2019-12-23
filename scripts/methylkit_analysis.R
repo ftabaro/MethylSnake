@@ -17,6 +17,7 @@ methylkitdb_folder <- snakemake@config[["methylkitdb_folder"]]
 alignments_folder  <- snakemake@config[["alignments_folder"]]
 
 rdata_folder    <- snakemake@config[["rdata_folder"]]
+bed_folder      <- snakemake@config[["bed_folder"]]
 pictures_folder <- snakemake@config[["pictures_folder"]]
 tables_folder   <- snakemake@config[["tables_folder"]]
 message(sprintf("Folder summary:\n\tmethylkitdb_folder: %s\n\talignments_folder: %s\n\trdata_folder: %s\n\tpictures_folder: %s\n\ttables_folder: %s",methylkitdb_folder, alignments_folder, rdata_folder, pictures_folder, tables_folder))
