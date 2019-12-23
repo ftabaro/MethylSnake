@@ -11,3 +11,4 @@ A Snakemake pipeline for RRBS data analysis
 - pyaml
 - r
 - methylkit
+- rtracklayer
