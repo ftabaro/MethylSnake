@@ -16,7 +16,7 @@ PATHS="$WD,$GENOME,$BISMARK_IDX,$TMP_FOLDER"
 PATHS=$(echo $PATHS |sed 's/ //g')
 
 
-SBATCH="sbatch -J {cluster.jobname} --partition={cluster.partition} --mem={cluster.mem} --time={cluster.time} --cpus-per-task={threads} -e ${LOG_FOLDER%/}/{cluster.log} -o ${LOG_FOLDER%/}/{cluster.log}"
+SBATCH="sbatch -J {cluster.jobname} --partition={cluster.partition} --mem={cluster.mem} --time={cluster.time} --cpus-per-task={cluster.cpus} -e ${LOG_FOLDER%/}/{cluster.log} -o ${LOG_FOLDER%/}/{cluster.log}"
 
 snakemake -r -p -j 100 --configfile "$1" \
     --cluster "$SBATCH" \

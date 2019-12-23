@@ -5,6 +5,7 @@ message("#################################\n## Starting methylKit analysis ##\n#
 suppressPackageStartupMessages(library(methylKit))
 suppressPackageStartupMessages(library(genomation))
 suppressPackageStartupMessages(library(GenomicRanges))
+suppressPackageStartupMessages(library(rtracklayer))
 
 
 
