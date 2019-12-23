@@ -14,7 +14,8 @@ rule all:
       os.path.join(config["alignments_folder"], "bismark_summary_report.html"),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
-      os.path.join(config["wd"], "methylkit_analysis.done")
+      os.path.join(config["wd"], "methylkit_analysis.done"),
+      os.path.join(config["wd"], "fastqc.done")
 
 rule fastqc:
     message: "Running FastQC..."

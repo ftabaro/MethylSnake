@@ -155,6 +155,11 @@ def make_parser():
         default="tables",
         help="Path to a folder to write tables in")
 
+    parser.add_argument("--fastqc-folder",
+        default="fastqc",
+        help="FastQC results folder")
+
+
     args = parser.parse_args()
     return vars(args)
 
