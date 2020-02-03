@@ -187,6 +187,7 @@ def make_env(args):
         if not os.path.exists(args[k]):
             os.makedirs(args[k])
             print("Created {}".format(args[k]))
+    return args
 
 
 def parse_samples(sample_sheet_path):
