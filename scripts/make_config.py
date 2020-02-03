@@ -181,7 +181,7 @@ def make_env(args):
 
         if test_relative_path(args[k]):
             new = os.path.join(args["wd"], args[k])
-            print("Setting {}: {} -> {}", k, args[k], new)
+            print("Setting {}: {} -> {}".format( k, args[k], new))
             args[k] = new
 
         if not os.path.exists(args[k]):
