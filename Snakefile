@@ -20,7 +20,7 @@ rule all:
       expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"), sample=config["samples"]),
       expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html"), sample=config["samples"]),
 
- 
+
 rule fastqc:
     message: "Running FastQC..."
     input:
@@ -252,5 +252,6 @@ rule run_methylkit_analysis:
     sample_sheet=config["sample_sheet"]
   output:
     touch(os.path.join(config["wd"], "methylkit_analysis.done"))
+  threads: 6
   script:
     "scripts/methylkit_analysis.R"

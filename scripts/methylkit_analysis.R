@@ -15,12 +15,23 @@ suppressPackageStartupMessages(library(rtracklayer))
 
 # shared folders
 methylkitdb_folder <- snakemake@config[["methylkitdb_folder"]]
+message("methylkitdb_folder = ", methylkitdb_folder)
+
 alignments_folder  <- snakemake@config[["alignments_folder"]]
+message("alignments_folder = ", alignments_folder)
 
 rdata_folder    <- snakemake@config[["rdata_folder"]]
+message("rdata_folder = ", rdata_folder)
+
 bed_folder      <- snakemake@config[["bed_folder"]]
+message("bed_folder = ", bed_folder)
+
 pictures_folder <- snakemake@config[["pictures_folder"]]
+message("pictures_folder = ", pictures_folder)
+
 tables_folder   <- snakemake@config[["tables_folder"]]
+message("tables_folder = ", tables_folder)
+
 message(sprintf("Folder summary:\n\tmethylkitdb_folder: %s\n\talignments_folder: %s\n\trdata_folder: %s\n\tpictures_folder: %s\n\ttables_folder: %s",methylkitdb_folder, alignments_folder, rdata_folder, pictures_folder, tables_folder))
 
 # dmr paramters
@@ -29,7 +40,7 @@ step_size     <- as.numeric(snakemake@config[["dmr_step_size"]])
 diff          <- as.numeric(snakemake@config[["dmr_difference"]])
 qvalue        <- as.numeric(snakemake@config[["dmr_qvalue"]])
 min_per_group <- as.numeric(snakemake@config[["min_per_group"]])
-message(sprintf("DMR calling parameters: ws=%d (%s) - ss=%d  (%s) - diff = %d (%s) - q-value=%.6f (%s) - min-per-group=%d (%s)",
+message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %d (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)",
   window_size, class(window_size),
   step_size, class(step_size),
   diff, class(diff),
@@ -38,12 +49,20 @@ message(sprintf("DMR calling parameters: ws=%d (%s) - ss=%d  (%s) - diff = %d (%
 
 # annotation file
 annotation_file <- snakemake@input[["annotation_file"]]
+message("annotation_file = ", annotation_file)
 
 # other params
 threads            <- snakemake@threads
+message("Available threads ", threads)
+
 genome_version     <- snakemake@config[["genome_version"]]
+message("Genome version = ", genome_version)
+
 mate1_pattern      <- snakemake@config[["mate1_pattern"]]
+message("mate1_pattern = ", mate1_pattern)
+
 samples_sheet_path <- snakemake@input[["sample_sheet"]]
+message("samples_sheet_path = ", samples_sheet_path)
 
 
 
@@ -145,9 +164,9 @@ seqlevelsStyle(gene.obj) <- "UCSC"
 
 make_methylkitdb_object <- function (input_paths, sample.id, treatment, methylRawObj_rds_path, .methylkitdb_folder = methylkitdb_folder) {
 
-  message(sprintf("Input paths (%d - %s): ", length(input_paths), class(input_paths)), paste(input_paths, collapse=", "))
-  message(sprintf("Samples ids (%d -  %s): ", length(sample.id), class(sample.id)), paste(sample.id, collapse=", "))
-  message(sprintf("Treatment vector (%d - %s): ", length(treatment), class(treatment)), paste(treatment, collapse=", "))
+  message(sprintf("Input paths (%d - %s):\n", length(input_paths), class(input_paths)), paste(input_paths, collapse="\n"))
+  message(sprintf("Samples ids (%d -  %s):\n", length(sample.id), class(sample.id)), paste(sample.id, collapse="\n"))
+  message(sprintf("Treatment vector (%d - %s):\n", length(treatment), class(treatment)), paste(treatment, collapse="\n"))
 
   if (is.null(.methylkitdb_folder)) {
     # work in memory
@@ -185,20 +204,23 @@ make_methylkitdb_object <- function (input_paths, sample.id, treatment, methylRa
 
   message(sprintf("MethylKit Rdata object path is: %s", methylRawObj_rds_path))
   saveRDS(methylRawObj, file = methylRawObj_rds_path)
-  message("RData object saved to disk.")
+  message("RData object saved to ", methylRawObj_rds_path)
 
   for (i in seq_along(sample.id)) {
     sample <- sample.id[[i]]
+    message(sprintf("Sample id: %s", sample))
 
     out.file <- file.path(pictures_folder, sprintf("%s_preliminary_stats.pdf", sample))
-    message(sprintf("Sample id : %s - PDF path is: %s", sample, out.file))
-
-    pdf(out.file, height=20, width=10)
-    par(pty="s", mfrow=c(2,1))
-    getMethylationStats(methylRawObj[[i]], plot=TRUE, both.strands=FALSE)
-    getCoverageStats(methylRawObj[[i]], plot=TRUE, both.strands=FALSE)
-    dev.off()
-
+    if (!file.exists(out.file)){
+      message(sprintf("PDF path is: %s", out.file))
+      pdf(out.file, height=20, width=10)
+      par(pty="s", mfrow=c(2,1))
+      getMethylationStats(methylRawObj[[i]], plot=TRUE, both.strands=FALSE)
+      getCoverageStats(methylRawObj[[i]], plot=TRUE, both.strands=FALSE)
+      dev.off()
+    } else {
+        message(sprintf("%s exists.", out.file))
+    }
   }
 
   message("MethylRawObj successfully computed.")
@@ -274,48 +296,67 @@ diff_meth_analysis <- function (methDiffObj,
     qvalue=qvalue,
     type=direction)
   saveRDS(dmr, dmr_path)
+  message(sprintf("Diff meth calls RDS object saved to %s", dmr_path))
 
   if (direction == "all"){
-    dmrPerChr <- diffMethPerChr(methDiffObj,
-      plot = FALSE,
-      qvalue.cutoff=qvalue,
-      meth.cutoff=diff )
-    saveRDS(dmrPerChr, dmrPerChr_path)
+    tryCatch({
+      dmrPerChr <- diffMethPerChr(methDiffObj,
+        plot = FALSE,
+        qvalue.cutoff=qvalue,
+        meth.cutoff=diff )
+      saveRDS(dmrPerChr, dmrPerChr_path)
+      message(sprintf("diffMethPerChr RDS object saved to %s", dmrPerChr_path))
 
-    chroms <- levels(seqnames(as(methDiffObj, "GRanges")))
-    exclude <- as.factor(grep("_", chroms, value = TRUE))
+      chroms <- levels(seqnames(as(methDiffObj, "GRanges")))
+      exclude <- as.factor(grep("_", chroms, value = TRUE))
 
-    pdf(dmrPerChr_plot)
-    diffMethPerChr(methDiffObj, plot = TRUE,
-      qvalue.cutoff=qvalue,
-      meth.cutoff=diff,
-      exclude = exclude)
-    dev.off()
+      pdf(dmrPerChr_plot)
+      diffMethPerChr(methDiffObj,
+        plot = TRUE,
+        qvalue.cutoff=qvalue,
+        meth.cutoff=diff,
+        exclude = exclude)
+      dev.off()
+      message(sprintf("diffMethPerChr plot saved to %s", dmrPerChr_plot))
+    }, error = function (er) {
+      message("Could not plot per-chromosome differential methylation distribution proceeding.")
+      return()
+    })
   }
 
   message("Differential methylation analysis complete.")
 
   if(nrow(dmr) > 0){
-    message(sprintf("Detected %d DMR (type = %s).", nrow(dmr), direction))
+    tryCatch({
 
-    dmr_gr <- as(dmr, "GRanges")
+      message(sprintf("Detected %d DMR (type = %s).", nrow(dmr), direction))
 
-    seqlevels(dmr_gr, pruning.mode="coarse") <- seqlevels(gene.obj)
+      dmr_gr <- as(dmr, "GRanges")
 
-    annotated <- annotateWithGeneParts(dmr_gr, gene.obj)
-    saveRDS(annotated, dmr_annotated_path)
+      seqlevels(dmr_gr, pruning.mode="coarse") <- seqlevels(gene.obj)
 
-    pdf(gene_part_annot_plot)
-    plotTargetAnnotation(annotated,
-      precedence = TRUE,
-      main="Annotation of DMRs")
-    dev.off()
+      annotated <- annotateWithGeneParts(dmr_gr, gene.obj)
+      saveRDS(annotated, dmr_annotated_path)
+      message(sprintf("Annotated diff meth saved to %s", dmr_annotated_path))
 
-    tbl <- getAssociationWithTSS(annotated)
-    write.csv(tbl, file=tss_association)
+      pdf(gene_part_annot_plot)
+      plotTargetAnnotation(annotated,
+        precedence = TRUE,
+        main="Annotation of DMRs")
+      dev.off()
+      message(sprintf("Annotated diff meth plot saved to %s", gene_part_annot_plot))
 
-    # cat(tbl, "\n")
-    message("Annotation complete.")
+      tbl <- getAssociationWithTSS(annotated)
+      write.csv(tbl, file=tss_association)
+      message(sprintf("Annotated diff meth table saved to %s", tss_association))
+
+      # cat(tbl, "\n")
+      message("Annotation complete.")
+
+    }, error = function (er) {
+      message("Could not complete differentially methylated features annotation. Proceeding.")
+    })
+
   } else {
     warning("NO DMR TO ANNOTATE")
     saveRDS("NO DMR TO ANNOTATE", dmr_annotated_path)
@@ -364,14 +405,22 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
 }
 
 export_bed <- function(paths) {
-    for (p in paths) {
-        bnp <- basename(p)
-        obj <- readRDS(p)
-        gr <- as(obj, "GRanges")
-        bed_path <- file.path(bed_folder, sub("rds", "bed", bnp))
-        export(gr, con = bed_path, format = "BED")
-        message("%s exported to %s", bnp, bed_path)
-    }
+  for (p in paths) {
+      tryCatch({
+      bnp <- basename(p)
+      obj <- readRDS(p)
+      gr <- as(obj, "GRanges")
+      bed_path <- file.path(bed_folder, sub("rds", "bed", bnp))
+      message("Bed file will be written in", bed_path)
+      export(gr, con = bed_path, format = "BED")
+      message("DONE")
+      }, error = function (er) {
+          message("An error occurred!")
+          print(p)
+          print(bed_folder)
+          stop(er)
+      })
+  }
 }
 
 
@@ -433,7 +482,7 @@ if (length(treatment_levels) > 2) {
         #########
 
         do_diff_meth_analysis(diffMeth, cur_dmc_paths)
-        export_bed(cur_dmc_paths)
+        export_bed(c(cur_dmc_paths["rds_path"], cur_dmc_paths["hypo_rds_path"], cur_dmc_paths["hyper_rds_path"]))
 
         #########
         ## DMR ##
@@ -444,7 +493,8 @@ if (length(treatment_levels) > 2) {
         diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = cur_diffMethTiles_rds_path)
 
         do_diff_meth_analysis(diffMethTiles, cur_dmr_paths)
-        export_bed(cur_dmr_paths)
+        export_bed(c(cur_dmr_paths["rds_path"], cur_dmr_paths["hypo_rds_path"], cur_dmr_paths["hyper_rds_path"]))
+
 
     }
 
@@ -460,7 +510,8 @@ if (length(treatment_levels) > 2) {
     #########
 
     do_diff_meth_analysis(diffMeth, dmc_paths)
-    export_bed(cur_dmc_paths)
+    export_bed(c(dmc_paths["rds_path"], dmc_paths["hypo_rds_path"], dmc_paths["hyper_rds_path"]))
+
 
     #########
     ## DMR ##
@@ -471,7 +522,8 @@ if (length(treatment_levels) > 2) {
     diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = diffMethTiles_rds_path)
 
     do_diff_meth_analysis(diffMethTiles, dmr_paths)
-    export_bed(cur_dmr_paths)
+    export_bed(c(dmr_paths["rds_path"], dmr_paths["hypo_rds_path"], dmr_paths["hyper_rds_path"]))
+
 
 }
 

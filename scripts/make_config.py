@@ -174,7 +174,7 @@ def make_env(args):
         if test_relative_path(args[k]) and args[k] != "-":
             args[k] = os.path.abspath(args[k])
 
-    for k in ["tmp_folder", "log_folder", "reads_folder", "trimmed_folder", "alignments_folder", "reports_folder", "nucleotide_stats_folder", "methylkitdb_folder", "rdata_folder", "pictures_folder", "tables_folder"]:
+    for k in ["tmp_folder", "log_folder", "reads_folder", "trimmed_folder", "alignments_folder", "reports_folder", "nucleotide_stats_folder", "methylkitdb_folder", "rdata_folder", "pictures_folder", "tables_folder", "bed_folder"]:
 
         if args[k] == "NULL":
             continue
