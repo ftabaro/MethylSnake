@@ -14,3 +14,4 @@ python scripts/make_config.py \
     --mate2-pattern _R2_001 \
     --fastq-extension .fastq.gz \
     --log-folder log
+
