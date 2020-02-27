@@ -35,10 +35,10 @@ rule all:
 #         dir=config["fastqc_folder"]
 #     threads: 6
 #     shell:
-        """
-        fastqc -o {params.dir} -t {threads} --noextract {input[0]}
-        fastqc -o {params.dir} -t {threads} --noextract {input[1]}
-        """
+#        """
+#        fastqc -o {params.dir} -t {threads} --noextract {input[0]}
+#        fastqc -o {params.dir} -t {threads} --noextract {input[1]}
+#        """
 
 # rule multiqc:
 # rule bismark_genome_prep:
