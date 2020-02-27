@@ -25,5 +25,5 @@ snakemake -r -p -j 100 --configfile "$1" \
     --rerun-incomplete \
     --use-singularity \
     --singularity-args "--bind $PATHS" \
-    --rerun-incomplete -n
+    --rerun-incomplete
 #    --jobscript jobscripts/narvi.sh \
