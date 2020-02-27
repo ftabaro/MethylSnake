@@ -15,26 +15,26 @@ rule all:
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
       os.path.join(config["wd"], "methylkit_analysis.done"),
-      expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"), sample=config["samples"]),
-      expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"), sample=config["samples"]),
-      expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"), sample=config["samples"]),
-      expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html"), sample=config["samples"]),
+      expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"), sample=config["samples"])
+#       expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"), sample=config["samples"]),
+#       expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"), sample=config["samples"]),
+#       expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html"), sample=config["samples"]),
 
 
-rule fastqc:
-    message: "Running FastQC..."
-    input:
-        os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]),
-        os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]),
-    output:
-        os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"),
-        os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"),
-        os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"),
-        os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html")
-    params:
-        dir=config["fastqc_folder"]
-    threads: 6
-    shell:
+# rule fastqc:
+#     message: "Running FastQC..."
+#     input:
+#         os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]),
+#         os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]),
+#     output:
+#         os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"),
+#         os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"),
+#         os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"),
+#         os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html")
+#     params:
+#         dir=config["fastqc_folder"]
+#     threads: 6
+#     shell:
         """
         fastqc -o {params.dir} -t {threads} --noextract {input[0]}
         fastqc -o {params.dir} -t {threads} --noextract {input[1]}
