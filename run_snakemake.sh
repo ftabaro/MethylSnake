@@ -10,9 +10,10 @@ mkdir -p "$LOG_FOLDER"
 WD=$(grep wd "$1" | awk -F":" '{print $2}')
 GENOME=$(grep genome_path "$1" | awk -F":" '{print $2}' |xargs dirname)
 BISMARK_IDX=$(grep bismark_index_path "$1" | awk -F":" '{print $2}' |xargs dirname)
+ANNOTATION=$(grep annotation_file "$1" | awk -F":" '{print $2}' |xargs dirname)
 TMP_FOLDER=$(grep tmp_folder "$1" | awk -F":" '{print $2}')
 
-PATHS="$WD,$GENOME,$BISMARK_IDX,$TMP_FOLDER"
+PATHS="$WD,$ANNOTATION,$GENOME,$BISMARK_IDX,$TMP_FOLDER"
 PATHS=$(echo $PATHS |sed 's/ //g')
 
 
