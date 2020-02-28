@@ -14,31 +14,31 @@ rule all:
       os.path.join(config["alignments_folder"], "bismark_summary_report.html"),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_filtered.bam"), sample=config["samples"]),
       expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.nonCG_removed_seqs.bam"), sample=config["samples"]),
-      os.path.join(config["wd"], "methylkit_analysis.done")
-      # expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"), sample=config["samples"]),
-      # expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"), sample=config["samples"]),
-      # expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"), sample=config["samples"]),
-      # expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html"), sample=config["samples"]),
+      os.path.join(config["wd"], "methylkit_analysis.done"),
+      expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"), sample=config["samples"]),
+      expand(os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"), sample=config["samples"]),
+      expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"), sample=config["samples"]),
+      expand(os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html"), sample=config["samples"]),
 
 
-# rule fastqc:
-#     message: "Running FastQC..."
-#     input:
-#         os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]),
-#         os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]),
-#     output:
-#         os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"),
-#         os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"),
-#         os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"),
-#         os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html")
-#     params:
-#         dir=config["fastqc_folder"]
-#     threads: 6
-#     shell:
-#        """
-#        fastqc -o {params.dir} -t {threads} --noextract {input[0]}
-#        fastqc -o {params.dir} -t {threads} --noextract {input[1]}
-#        """
+rule fastqc:
+    message: "Running FastQC..."
+    input:
+        os.path.join(config["reads_folder"], mate1_root + config["fastq_extension"]),
+        os.path.join(config["reads_folder"], mate2_root + config["fastq_extension"]),
+    output:
+        os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.zip"),
+        os.path.join(config["fastqc_folder"], mate1_root + "_fastqc.html"),
+        os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.zip"),
+        os.path.join(config["fastqc_folder"], mate2_root + "_fastqc.html")
+    params:
+        dir=config["fastqc_folder"]
+    threads: 6
+    shell:
+       """
+       fastqc -o {params.dir} -t {threads} --noextract {input[0]}
+       fastqc -o {params.dir} -t {threads} --noextract {input[1]}
+       """
 
 # rule multiqc:
 # rule bismark_genome_prep:
@@ -97,31 +97,6 @@ rule bismark_align:
         --ambig_bam --nucleotide_coverage --output_dir {config[alignments_folder]} \
         --fastq --temp_dir {params[0]} -1 {input[0]} -2 {input[1]}
       """
-
-# rule samtools_sort:
-#     input:
-#       os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe.bam")
-#     output:
-#       os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe_sorted.bam")
-#     params:
-#       tmp_folder=config["tmp_folder"]
-#     threads: 8
-#     conda: os.path.join(config["environments_folder"], "rrbs.yaml")
-#     shell:
-#       """
-#       samtools sort -o {output} -T {params.tmp_folder} -@ {threads} {input}
-#       """
-
-# rule samtools_index:
-#   input:
-#     os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe_sorted.bam")
-#   output:
-#     os.path.join(config["alignments_folder"], "{sample}_1_val_1_bismark_bt2_pe_sorted.bam.bai")
-#   conda: os.path.join(config["environments_folder"], "rrbs.yaml")
-#   shell:
-#     """
-#     samtools index {input}
-#     """
 
 
 rule methylation_extractor:

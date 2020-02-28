@@ -29,17 +29,14 @@
     {
         "time"      : "04:00:00"
     },
-    "methylkit_detect_dmr": {
-        "cpus": 6,
-        "mem": "64G"
-    },
-    "make_methylkit_db": {
-        "time": "06:00:00",
-        "mem": "16G"
-    },
     "run_methylkit_analysis": {
         "time": "12:00:00",
         "mem": "60G",
+        "cpus": 6
+    },
+    "fastqc": {
+        "time": "1:00:00",
+        "mem": "4G",
         "cpus": 6
     }
 }
