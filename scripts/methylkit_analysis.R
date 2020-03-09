@@ -40,7 +40,7 @@ step_size     <- as.numeric(snakemake@config[["dmr_step_size"]])
 diff          <- as.numeric(snakemake@config[["dmr_difference"]])
 qvalue        <- as.numeric(snakemake@config[["dmr_qvalue"]])
 min_per_group <- as.numeric(snakemake@config[["min_per_group"]])
-message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %d (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)",
+message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %.2f (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)",
   window_size, class(window_size),
   step_size, class(step_size),
   diff, class(diff),
