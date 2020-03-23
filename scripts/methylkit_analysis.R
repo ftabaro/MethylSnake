@@ -34,6 +34,10 @@ message("tables_folder = ", tables_folder)
 
 message(sprintf("Folder summary:\n\tmethylkitdb_folder: %s\n\talignments_folder: %s\n\trdata_folder: %s\n\tpictures_folder: %s\n\ttables_folder: %s",methylkitdb_folder, alignments_folder, rdata_folder, pictures_folder, tables_folder))
 
+# coverage paramters
+low_count_thr <- as.numeric(snakemake@config[["low_coverage_threshold"]])
+high_perc_thr <- as.numeric(snakemake@config[["high_coverage"]])
+
 # dmr paramters
 window_size   <- as.numeric(snakemake@config[["dmr_window_size"]])
 step_size     <- as.numeric(snakemake@config[["dmr_step_size"]])
@@ -222,6 +226,8 @@ make_methylkitdb_object <- function (input_paths, sample.id, treatment, methylRa
         message(sprintf("%s exists.", out.file))
     }
   }
+
+  methylRawObj <- filterByCoverage(methylRawObj, lo.count=low_count_thr, lo.perc=NULL, hi.count=NULL, hi.perc=high_perc_thr)
 
   message("MethylRawObj successfully computed.")
   return(methylRawObj)
