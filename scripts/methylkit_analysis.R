@@ -1,4 +1,4 @@
-options(warn=1)
+    options(warn=1)
 sink(stdout(), type = "message")
 message("#################################\n## Starting methylKit analysis ##\n#################################")
 
@@ -34,9 +34,9 @@ message("tables_folder = ", tables_folder)
 
 message(sprintf("Folder summary:\n\tmethylkitdb_folder: %s\n\talignments_folder: %s\n\trdata_folder: %s\n\tpictures_folder: %s\n\ttables_folder: %s",methylkitdb_folder, alignments_folder, rdata_folder, pictures_folder, tables_folder))
 
-# coverage paramters
-low_count_thr <- as.numeric(snakemake@config[["low_coverage_threshold"]])
-high_perc_thr <- as.numeric(snakemake@config[["high_coverage"]])
+# coverage parameters
+low_count_thr <- as.numeric(snakemake@config[["low_coverage_count"]])
+high_perc_thr <- as.numeric(snakemake@config[["high_coverage_percentage"]])
 
 # dmr paramters
 window_size   <- as.numeric(snakemake@config[["dmr_window_size"]])
@@ -44,12 +44,14 @@ step_size     <- as.numeric(snakemake@config[["dmr_step_size"]])
 diff          <- as.numeric(snakemake@config[["dmr_difference"]])
 qvalue        <- as.numeric(snakemake@config[["dmr_qvalue"]])
 min_per_group <- as.numeric(snakemake@config[["min_per_group"]])
-message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %.2f (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)",
+message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %.2f (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)\nlow count thr = %d (%s)\nhigh perc thr = %.2f (%s)",
   window_size, class(window_size),
   step_size, class(step_size),
   diff, class(diff),
   qvalue, class(qvalue),
-  min_per_group, class(min_per_group)))
+  min_per_group, class(min_per_group),
+  low_count_thr, class(low_count_thr),
+  high_perc_thr, class(high_perc_thr)))
 
 # annotation file
 annotation_file <- snakemake@input[["annotation_file"]]
@@ -227,7 +229,9 @@ make_methylkitdb_object <- function (input_paths, sample.id, treatment, methylRa
     }
   }
 
-  methylRawObj <- filterByCoverage(methylRawObj, lo.count=low_count_thr, lo.perc=NULL, hi.count=NULL, hi.perc=high_perc_thr)
+  methylRawObj <- filterByCoverage(methylRawObj, lo.count=as.integer(low_count_thr), 
+                                   lo.perc=NULL, hi.count=NULL, hi.perc=high_perc_thr)
+  saveRDS(methylRawObj, file=sub("methylRawObj", "methylRawObjFiltered", methylRawObj_rds_path))
 
   message("MethylRawObj successfully computed.")
   return(methylRawObj)
