@@ -225,6 +225,9 @@ rule run_methylkit_analysis:
     expand(os.path.join(config["alignments_folder"], mate1_root + "_val_1_bismark_bt2_pe.CpG_report.txt.gz"), sample=config["samples"]),
     annotation_file=re.sub("gtf.gz", "bed12", config["annotation_file"]),
     sample_sheet=config["sample_sheet"]
+  params:
+    dmr_difference="{diff}",
+    dmr_qvalue="{q}"
   output:
     touch(expand(os.path.join(config["log_folder"], "methylkit_analysis{q}_{diff}.done"), q=config["dmr_qvalue"], diff=config["dmr_difference"]))
   threads: 6

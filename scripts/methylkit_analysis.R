@@ -41,8 +41,8 @@ high_perc_thr <- as.numeric(snakemake@config[["high_coverage_percentage"]])
 # dmr paramters
 window_size   <- as.numeric(snakemake@config[["dmr_window_size"]])
 step_size     <- as.numeric(snakemake@config[["dmr_step_size"]])
-diff          <- as.numeric(snakemake@config[["dmr_difference"]])
-qvalue        <- as.numeric(snakemake@config[["dmr_qvalue"]])
+diff          <- as.numeric(snakemake@params[["dmr_difference"]])
+qvalue        <- as.numeric(snakemake@params[["dmr_qvalue"]])
 min_per_group <- as.numeric(snakemake@config[["min_per_group"]])
 message(sprintf("DMR calling parameters:\nws=%d (%s)\nss=%d  (%s)\ndiff = %.2f (%s)\nq-value=%.6f (%s)\nmin-per-group=%d (%s)\nlow count thr = %d (%s)\nhigh perc thr = %.2f (%s)",
   window_size, class(window_size),
@@ -295,7 +295,7 @@ add_number_to_path <- function(path, i) {
 diff_meth_analysis <- function (methDiffObj,
   dmr_path, dmrPerChr_path, dmrPerChr_plot,
   dmr_annotated_path, gene_part_annot_plot, tss_association,
-  direction = "all") {
+  direction = "all", diff, qvalue) {
 
   if (is.null(direction)){
     direction <- "all"
@@ -386,7 +386,7 @@ compute_diffMeth <- function(methylMergedObj, diffMethObj_rds_path = diffMeth_rd
     return(diffMeth)
 }
 
-do_diff_meth_analysis <- function(diffMethObj, path_vector) {
+do_diff_meth_analysis <- function(diffMethObj, path_vector, diff, qvalue) {
 
   diff_meth_analysis(diffMethObj,
     dmr_path = path_vector["rds_path"],
@@ -394,7 +394,9 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
     dmrPerChr_plot = path_vector["perChr_plot_path"],
     dmr_annotated_path = path_vector["annotated_rds_path"],
     gene_part_annot_plot = path_vector["gene_part_annotation_plot"],
-    tss_association = path_vector["tss_association_table"])
+    tss_association = path_vector["tss_association_table"],
+    diff = diff,
+    qvalue = qvalue)
 
   diff_meth_analysis(diffMethObj, direction="hypo",
     dmr_path = path_vector["hypo_rds_path"],
@@ -402,7 +404,10 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
     dmrPerChr_plot = path_vector["hypoPerChr_plot_path"],
     dmr_annotated_path = path_vector["hypo_annotated_rds_path"],
     gene_part_annot_plot = path_vector["hypo_gene_part_annotation_plot"],
-    tss_association = path_vector["hypo_tss_association_table"])
+    tss_association = path_vector["hypo_tss_association_table"],
+    diff = diff,
+    qvalue = qvalue)
+
 
   diff_meth_analysis(diffMethObj, direction="hyper",
     dmr_path = path_vector["hyper_rds_path"],
@@ -410,8 +415,9 @@ do_diff_meth_analysis <- function(diffMethObj, path_vector) {
     dmrPerChr_plot = path_vector["hyperPerChr_plot_path"],
     dmr_annotated_path = path_vector["hyper_annotated_rds_path"],
     gene_part_annot_plot = path_vector["hyper_gene_part_annotation_plot"],
-    tss_association = path_vector["hyper_tss_association_table"])
-
+    tss_association = path_vector["hyper_tss_association_table"],
+    diff = diff,
+    qvalue = qvalue)
 }
 
 export_bed <- function(paths) {
@@ -491,7 +497,7 @@ if (length(treatment_levels) > 2) {
         ## DMC ##
         #########
 
-        do_diff_meth_analysis(diffMeth, cur_dmc_paths)
+        do_diff_meth_analysis(diffMeth, cur_dmc_paths, diff = diff, qvalue = qvalue)
         export_bed(c(cur_dmc_paths["rds_path"], cur_dmc_paths["hypo_rds_path"], cur_dmc_paths["hyper_rds_path"]))
 
         #########
@@ -502,7 +508,7 @@ if (length(treatment_levels) > 2) {
 
         diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = cur_diffMethTiles_rds_path)
 
-        do_diff_meth_analysis(diffMethTiles, cur_dmr_paths)
+        do_diff_meth_analysis(diffMethTiles, cur_dmr_paths, diff = diff, qvalue = qvalue)
         export_bed(c(cur_dmr_paths["rds_path"], cur_dmr_paths["hypo_rds_path"], cur_dmr_paths["hyper_rds_path"]))
 
 
@@ -519,7 +525,7 @@ if (length(treatment_levels) > 2) {
     ## DMC ##
     #########
 
-    do_diff_meth_analysis(diffMeth, dmc_paths)
+    do_diff_meth_analysis(diffMeth, dmc_paths, diff = diff, qvalue = qvalue)
     export_bed(c(dmc_paths["rds_path"], dmc_paths["hypo_rds_path"], dmc_paths["hyper_rds_path"]))
 
 
@@ -531,7 +537,7 @@ if (length(treatment_levels) > 2) {
 
     diffMethTiles <- compute_diffMeth(tiles, diffMethObj_rds_path = diffMethTiles_rds_path)
 
-    do_diff_meth_analysis(diffMethTiles, dmr_paths)
+    do_diff_meth_analysis(diffMethTiles, dmr_paths, diff = diff, qvalue = qvalue)
     export_bed(c(dmr_paths["rds_path"], dmr_paths["hypo_rds_path"], dmr_paths["hyper_rds_path"]))
 
 
