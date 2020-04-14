@@ -75,10 +75,14 @@ def make_parser():
 
     parser.add_argument("--dmr-difference",
                         default=25,
+                        nargs="+",
+                        type=float,
                         help="Difference in reads coverage threshold for differential methylation analysis")
 
     parser.add_argument("--dmr-qvalue",
                         default=0.01,
+                        nargs="+",
+                        type=float,
                         help="Q-value threshold for differential methylation analysis")
 
     parser.add_argument("--min-per-group",
@@ -229,4 +233,5 @@ if __name__ == "__main__":
     args = make_parser()
     args = make_env(args)
     args["samples"] = parse_samples(args["sample_sheet"])
+    print(args)
     write_config(args)

@@ -226,7 +226,7 @@ rule run_methylkit_analysis:
     annotation_file=re.sub("gtf.gz", "bed12", config["annotation_file"]),
     sample_sheet=config["sample_sheet"]
   output:
-    touch(os.path.join(config["wd"], "methylkit_analysis.done"))
+    touch(expand(os.path.join(config["log_folder"], "methylkit_analysis{q}_{diff}.done"), q=config["dmr_qvalue"], diff=config["dmr_difference"]))
   threads: 6
   script:
     "scripts/methylkit_analysis.R"
