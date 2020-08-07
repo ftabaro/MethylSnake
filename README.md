@@ -1,4 +1,4 @@
-###### tags: snakemake DNA-methylation rrbs
+###### tags: `snakemake` `DNA-methylation` `rrbs`
 # MethylSnake
 
 A Snakemake pipeline for RRBS data analysis
