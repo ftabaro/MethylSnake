@@ -1,7 +1,6 @@
 .snakemake/
 *.png
 *.svg
-singularity/
 scripts/methylkit
 venv/
 test/
