@@ -20,9 +20,7 @@ From: centos:8
 
   dnf -y makecache
   dnf -y group install "Development Tools"
-  dnf -y install --allowerasing \
-	hostname \ 
-	which \
+  dnf -y install --allowerasing hostname which \
 	dnf-utils \
 	git \
 	unzip \
@@ -70,7 +68,7 @@ From: centos:8
   rm -rf tbb
   git clone https://github.com/intel/tbb
   cd tbb
-  make -j 8
+  make -j 2
   find . -name '*so' | grep release | xargs -I{} cp {} /usr/local/lib/  # Copy release libs to sys dir
   find . -name '*so.2' | grep release | xargs -I{} cp {} /usr/local/lib/
   cp -R include/* /usr/local/include/
@@ -90,7 +88,7 @@ From: centos:8
    autoheader
    autoconf
    ./configure
-   make -j 8
+   make -j 2
    make install
    cd ..
    rm -rf samtools
@@ -99,7 +97,7 @@ From: centos:8
    autoheader
    autoconf -Wno-syntax
    ./configure
-   make -j 8
+   make -j 2
    make install
    cd ..
 
@@ -115,7 +113,7 @@ From: centos:8
    wget -O bowtie.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.5.1/bowtie2-2.3.5.1-source.zip/download
    unzip -o bowtie.zip
    cd bowtie2-2.3.5.1
-   make -j 8
+   make -j 2
    cp bowtie2* /usr/local/bin/
    cd ..
 
@@ -175,7 +173,7 @@ From: centos:8
   tar xf R-4.0.2.tar.gz
   cd R-4.0.2
   ./configure --without-x 
-  make -j8 
+  make -j2
   make install
   cd ..
   rm -r R-4.0.2
