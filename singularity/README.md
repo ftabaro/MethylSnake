@@ -25,5 +25,5 @@ The container image can be built locally with:
 ```bash
 singularity build MethylSnake.sif Singularity
 ```
-s
+
 ###### tags: `singularity` `methylsnake` `DNA-methylation` `rrbs`
