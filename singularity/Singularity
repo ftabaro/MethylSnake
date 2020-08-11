@@ -6,36 +6,59 @@ From: centos:8
 %files
 
 %help
-
-   A container with R, Bioconductor and MethylKit installed on top of basic bioinformatics tools. For complete list see documentation of shub://thakk/bioinformatics
+   Tools for MethylSnake pipeline. For complete list and instructions see: https://github.com/ftabaro/MethylSnake/tree/master/singularity
 
 %labels
    Author francesco.tabaro@tuni.fi
-   Version 0.1
+   Version 1
 
 %post
+  set -e
   
   NOW=`date`
-  dnf -y makecache
-
   echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
-  set -e
 
+  dnf -y makecache
   dnf -y group install "Development Tools"
-  dnf -y install --allowerasing hostname which dnf-utils \
-    python3-pip git zlib zlib-devel bzip2 bzip2-devel \
-    xz xz-devel libcurl libcurl-devel ncurses ncurses-devel \
-    unzip wget gnuplot rsync java-1.8.0-openjdk java-1.8.0-openjdk-devel \
-    openssl-devel libffi-devel python36-devel \
-    bzip2 cairo fontconfig freetype fribidi glib2 \
-    libX11 libXext libXt libcurl libicu libjpeg libpng libtiff libtirpc libxcrypt \
-    ncurses pango pcre readline tcl tk xz zlib bzip2-devel cairo-devel \
-    fontconfig-devel freetype-devel fribidi-devel glib2-devel libX11-devel \
-    libXext-devel libXt-devel libcurl-devel libicu-devel libjpeg-devel libpng-devel \
-    libtiff-devel libtirpc-devel libxcrypt-devel ncurses-devel pango-devel \
-    pcre-devel readline-devel tcl-devel tk-devel xz-devel zlib-devel \
-    java-1.8.0-openjdk java-1.8.0-openjdk-devel openblas lapack \
-    gcc-gfortran boost boost-devel texlive libxml2-devel
+  dnf -y install --allowerasing \
+	hostname \ 
+	which \
+	dnf-utils \
+	git \
+	unzip \
+	wget \
+	rsync \
+	zlib zlib-devel \
+	bzip2 bzip2-devel \
+	xz xz-devel \
+	libcurl libcurl-devel \
+	ncurses ncurses-devel \
+	java-1.8.0-openjdk java-1.8.0-openjdk-devel \
+	openssl-devel \
+	libffi-devel \
+	cairo cairo-devel \
+	fontconfig fontconfig-devel \
+	freetype freetype-devel \
+	fribidi fribidi-devel \
+	glib2 glib2-devel \
+	libcurl libcurl-devel \
+	libicu libicu-devel \
+	libjpeg libjpeg-devel \
+	libpng libpng-devel \
+	libtiff libtiff-devel \
+	libtirpc libtirpc-devel \
+	libxcrypt libxcrypt-devel \
+	pango pango-devel \
+	pcre pcre-devel \
+	readline readline-devel \
+	zlib zlib-devel \
+	openblas \
+	lapack \
+	gcc-gfortran \
+	boost boost-devel \
+	texlive \
+	libxml2-devel \
+	python3-pip python36-devel
 
   ln -s /usr/bin/python3 /usr/bin/python
   ln -s /usr/bin/pip3 /usr/bin/pip
@@ -151,13 +174,39 @@ From: centos:8
   wget https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz
   tar xf R-4.0.2.tar.gz
   cd R-4.0.2
-  ./configure && make -j4 && make install
+  ./configure --without-x 
+  make -j8 
+  make install
   cd ..
   rm -r R-4.0.2
 
   R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
   R -e "BiocManager::install(version = '3.11')"
+  R -e "BiocManager::install('rtracklayer')"
   R -e "BiocManager::install('methylKit')"
 
+# ############################ gtfToGenePred ########################
+
+%apprun gtfToGenePred
+   exec gtfToGenePred
+
+%apphelp gtfToGenePred
+   gtfToGenePred (1.04.00) . https://hgdownload.soe.ucsc.edu/downloads.html
+
+%appinstall gtfToGenePred
+   curl -o /usr/local/bin/gtfToGenePred http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/gtfToGenePred
+   chmod +x /usr/local/bin/gtfToGenePred
+
+# ############################ genePredToBed ########################
+
+%apprun genePredToBed
+   exec genePredToBed
+
+%apphelp genePredToBed
+   genePredToBed (1.04.00) . https://hgdownload.soe.ucsc.edu/downloads.html
+
+%appinstall genePredToBed
+   curl -o /usr/local/bin/genePredToBed http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/genePredToBed
+   chmod +x /usr/local/bin/genePredToBed
 
 
