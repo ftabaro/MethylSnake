@@ -1,4 +1,5 @@
-###### tags: `snakemake` `DNA-methylation` `rrbs`
+[![hackmd-github-sync-badge](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ/badge)](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ)
+
 # MethylSnake
 
 A Snakemake pipeline for RRBS data analysis
@@ -18,6 +19,20 @@ The final output of the pipeline are a set of files for alignment, detected feat
 2. [Write a sample sheet](#how-to-write-the-sample-sheet) with per-sample specifications
 3. [Generate config file](#how-to-generate-the-config-file) 
 4. [Start the pipeline](#how-to-run-the-pipeline)
+
+### Tools
+
+- QC: **FastQC**
+- Trimming: **Trim_galore** (Cutadapt wrapper)
+- Alignment + methlyation extraction: **Bismark** (using Bowtie2)
+- Differential methylation detection: **MethylKit** (Bioconductor package)
+
+## Dependencies
+
+- `snakemake` 5.20.1: `pip install --user snakemake` or via Conda
+- `pyaml` 20.4 (PyYAML 5.3.1): `pip install --user pyaml`
+- `singularity` 3.6.1 has to be installed system wide, ask your admin
+- `slurm` 18.08.8 has to be installed system wide, ask your admin 
 
 ## How to write the sample sheet
 
@@ -40,7 +55,7 @@ sample7;2
 sample8;2
 sample9;2
 ```
-In this setup, samples 1, 2 and 3 are controls; samples 4, 5, 6 correspond to treatment 1 and samples 7, 8, 9 to treatment 2.
+In this setup, samples 1, 2 and 3 are control; samples 4, 5, 6 correspond to treatment 1 and samples 7, 8, 9 to treatment 2.
 
 ## How to generate the config file 
 
@@ -96,19 +111,76 @@ The pipeline is designed to run within a Singularity container. The path to the 
 A working container can be pulled from SingularityHub:
 
 ```
-singularity pull --name methylkit.sif shub://ftabaro/bioinfo-singularity-containers
+singularity pull --name methylkit.sif shub://ftabaro/MethylSnake
 ```
 
-Recipe for this container can be found [here](https://github.com/ftabaro/bioinfo-singularity-containers/blob/master/rrbs-pipeline/Singularity).
+Recipe for this container can be found [here](https://github.com/ftabaro/MethylSnake/blob/master/singularity/Singularity) embedded in this repository.
 
-The container download path has be specified in the command line arguments of the config script.
+The container path has be specified in the command line arguments of the config script.
 
-## Dependencies
 
-- `snakemake` 5.20.1: `pip install --user snakemake` or trough Conda
-- `pyaml` 20.4 (PyYAML 5.3.1): `pip install --user pyaml`
-- `singularity` 3.6.1 has to be installed system wide, ask your admin
-- `slurm` 18.08.8 has to be installed system wide, ask your admin 
+## Output description
+
+This pipeline generates a number of output files:
+
+- [FastQC reports](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/good_sequence_short_fastqc.html) for input and trimmed reads
+- Fastq files for trimmed reads files with reports (Fastqc and text)
+- Alignment files with report and nucleotide statistics
+- Alignment files with incomplete conversions removed
+- Methylation files in GpG, CHG and CHH contexts
+- [Bismark HTML reports](http://www.bioinformatics.babraham.ac.uk/projects/bismark/PE_report.html)
+- [Bismark HTML summary](https://www.bioinformatics.babraham.ac.uk/projects/bismark/bismark_summary_report.html)
+- rds files with every object computed by [MethylKit](https://bioconductor.org/packages/release/bioc/vignettes/methylKit/inst/doc/methylKit.html)
+- bed files of differential methylation calls
+- Figures
+  - prelimimary coverage and methylation state histograms
+  - samples PCA and correlations
+  - number of differentially methylated features per chromosome (DMC and DMR)
+  - pie charts of annotation classes
+    - all differentially methylated features
+    - hyper methylated
+    - hypo methylated
+- Tables
+  - distance to TSS for all, hyper and hypo methylated features (csv)
+
+### Ouput folder hierarchy
+
+An example of output directory (all directory names can be changed from the config file)
+
+```
+.
+├── alignments
+├── bed
+│   ├── dmc
+│   └── dmr
+├── fastqc
+├── log
+├── pictures
+│   ├── dmc
+│   └── dmr
+├── reads
+│   └── fastqc
+├── RData
+│   ├── dmc
+│   └── dmr
+├── reports
+├── tables
+│   ├── dmc
+│   └── dmr
+└── trimmed
+
+```
+
+## Useful links
+
+- https://www.nature.com/articles/nmeth.1828
+- https://www.epigenesys.eu/images/stories/protocols/pdf/20120720103700_p57.pdf
+- https://www.bioinformatics.babraham.ac.uk/projects/fastqc/
+- https://www.bioinformatics.babraham.ac.uk/projects/trim_galore/
+- https://github.com/FelixKrueger/TrimGalore/blob/master/Docs/Trim_Galore_User_Guide.md
+- https://www.bioinformatics.babraham.ac.uk/projects/bismark/
+- https://www.bioinformatics.babraham.ac.uk/projects/bismark/Bismark_User_Guide.pdf
+- https://github.com/FelixKrueger/Bismark/tree/master/Docs
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub at https://github.com/ftabaro/rrbs-pipeline/issues
@@ -214,3 +286,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ftabar
                         Percentage of the coverage distribution for high
                         coverage filtering (PCR duplicates)
 ```
+
+###### tags: `snakemake` `DNA-methylation` `rrbs`
