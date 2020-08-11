@@ -1,4 +1,4 @@
-###### tags: `snakemake` `DNA-methylation` `rrbs`
+[![hackmd-github-sync-badge](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ/badge)](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ)
 
 # MethylSnake
 
@@ -286,3 +286,5 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/ftabar
                         Percentage of the coverage distribution for high
                         coverage filtering (PCR duplicates)
 ```
+
+###### tags: `snakemake` `DNA-methylation` `rrbs`
