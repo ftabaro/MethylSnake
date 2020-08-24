@@ -179,9 +179,7 @@ From: centos:8
   rm -r R-4.0.2
 
   R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
-  R -e "BiocManager::install(version = '3.11')"
-  R -e "BiocManager::install('rtracklayer')"
-  R -e "BiocManager::install('methylKit')"
+  R -e "BiocManager::install(c('rtracklayer', 'methylKit'))"
 
 # ############################ gtfToGenePred ########################
 
