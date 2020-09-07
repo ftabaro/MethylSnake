@@ -19,9 +19,10 @@ From: centos:8
   echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
 
   dnf -y makecache
-  dnf -y group install "Development Tools"
   dnf -y install --allowerasing hostname which \
 	dnf-utils \
+	autoconf \
+	make \
 	git \
 	unzip \
 	wget \
