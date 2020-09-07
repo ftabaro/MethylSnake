@@ -22,7 +22,7 @@ From: centos:8
   dnf -y install --allowerasing hostname which \
 	dnf-utils \
 	autoconf \
-	g++ \
+	gcc gcc-c++ \
 	make \
 	git \
 	unzip \
