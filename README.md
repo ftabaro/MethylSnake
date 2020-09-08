@@ -111,10 +111,10 @@ The pipeline is designed to run within a Singularity container. The path to the 
 A working container can be pulled from SingularityHub:
 
 ```
-singularity pull --name methylkit.sif shub://ftabaro/MethylSnake
+singularity pull --name methylkit.sif shub://ftabaro/MethylSnake:methylkit
 ```
 
-Recipe for this container can be found [here](https://github.com/ftabaro/MethylSnake/blob/master/singularity/Singularity) embedded in this repository.
+Checkout [this](https://github.com/ftabaro/MethylSnake/blob/master/singularity/README.md) for more info.
 
 The container path has be specified in the command line arguments of the config script.
 
