@@ -65,7 +65,11 @@ From: centos:8
 	lapack \
 	gcc-gfortran \
 	boost boost-devel \
-	python3-pip python36-devel
+	python3-pip python36-devel \
+        zlib zlib-devel \
+        bzip2 bzip2-devel \
+        xz xz-devel \
+        ncurses ncurses-devel
 
   ln -s /usr/bin/python3 /usr/bin/python
   ln -s /usr/bin/pip3 /usr/bin/pip
