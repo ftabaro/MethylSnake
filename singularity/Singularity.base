@@ -6,36 +6,70 @@ From: centos:8
 %files
 
 %help
-
-   A container with R, Bioconductor and MethylKit installed on top of basic bioinformatics tools. For complete list see documentation of shub://thakk/bioinformatics
+   Tools for MethylSnake pipeline. For complete list and instructions see: https://github.com/ftabaro/MethylSnake/tree/master/singularity
 
 %labels
-   Author francesco.tabaro@tuni.fi
-   Version 0.1
+   MAINTAINER francesco.tabaro@tuni.fi
+   VERSION 1.0
+
+%environment
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
 
 %post
+  set -e
   
   NOW=`date`
-  dnf -y makecache
+
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
 
   echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
-  set -e
 
-  dnf -y group install "Development Tools"
-  dnf -y install --allowerasing hostname which dnf-utils \
-    python3-pip git zlib zlib-devel bzip2 bzip2-devel \
-    xz xz-devel libcurl libcurl-devel ncurses ncurses-devel \
-    unzip wget gnuplot rsync java-1.8.0-openjdk java-1.8.0-openjdk-devel \
-    openssl-devel libffi-devel python36-devel \
-    bzip2 cairo fontconfig freetype fribidi glib2 \
-    libX11 libXext libXt libcurl libicu libjpeg libpng libtiff libtirpc libxcrypt \
-    ncurses pango pcre readline tcl tk xz zlib bzip2-devel cairo-devel \
-    fontconfig-devel freetype-devel fribidi-devel glib2-devel libX11-devel \
-    libXext-devel libXt-devel libcurl-devel libicu-devel libjpeg-devel libpng-devel \
-    libtiff-devel libtirpc-devel libxcrypt-devel ncurses-devel pango-devel \
-    pcre-devel readline-devel tcl-devel tk-devel xz-devel zlib-devel \
-    java-1.8.0-openjdk java-1.8.0-openjdk-devel openblas lapack \
-    gcc-gfortran boost boost-devel texlive libxml2-devel
+  dnf -y makecache
+  dnf -y install --allowerasing \
+        hostname which \
+	dnf-utils \
+	autoconf \
+	gcc gcc-c++ \
+	make \
+	git \
+	unzip \
+	wget \
+	rsync \
+	java-1.8.0-openjdk java-1.8.0-openjdk-devel \
+	libffi-devel \
+	openblas \
+	lapack \
+	gcc-gfortran \
+	boost boost-devel \
+	python3-pip python36-devel \
+        zlib zlib-devel \
+        bzip2 bzip2-devel \
+        xz xz-devel \
+        ncurses ncurses-devel
 
   ln -s /usr/bin/python3 /usr/bin/python
   ln -s /usr/bin/pip3 /usr/bin/pip
@@ -47,7 +81,7 @@ From: centos:8
   rm -rf tbb
   git clone https://github.com/intel/tbb
   cd tbb
-  make -j 8
+  make -j 2
   find . -name '*so' | grep release | xargs -I{} cp {} /usr/local/lib/  # Copy release libs to sys dir
   find . -name '*so.2' | grep release | xargs -I{} cp {} /usr/local/lib/
   cp -R include/* /usr/local/include/
@@ -67,7 +101,7 @@ From: centos:8
    autoheader
    autoconf
    ./configure
-   make -j 8
+   make -j 2
    make install
    cd ..
    rm -rf samtools
@@ -76,7 +110,7 @@ From: centos:8
    autoheader
    autoconf -Wno-syntax
    ./configure
-   make -j 8
+   make -j 2
    make install
    cd ..
 
@@ -92,7 +126,7 @@ From: centos:8
    wget -O bowtie.zip https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.5.1/bowtie2-2.3.5.1-source.zip/download
    unzip -o bowtie.zip
    cd bowtie2-2.3.5.1
-   make -j 8
+   make -j 2
    cp bowtie2* /usr/local/bin/
    cd ..
 
@@ -138,26 +172,28 @@ From: centos:8
 %apphelp bismark
     Bismark (0.22.3) . https://github.com/FelixKrueger/Bismark
 
-# ############################ R + Bioconductor + methylKit ########################
+# ############################ gtfToGenePred ########################
 
-%apprun R
-   exec R
+%apprun gtfToGenePred
+   exec gtfToGenePred
 
-%apphelp R
-    R (4.0.2) . https://www.r-project.org/
+%apphelp gtfToGenePred
+   gtfToGenePred (1.04.00) . https://hgdownload.soe.ucsc.edu/downloads.html
 
-%appinstall R
- 
-  wget https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz
-  tar xf R-4.0.2.tar.gz
-  cd R-4.0.2
-  ./configure && make -j4 && make install
-  cd ..
-  rm -r R-4.0.2
+%appinstall gtfToGenePred
+   curl -o /usr/local/bin/gtfToGenePred http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/gtfToGenePred
+   chmod +x /usr/local/bin/gtfToGenePred
 
-  R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
-  R -e "BiocManager::install(version = '3.11')"
-  R -e "BiocManager::install('methylKit')"
+# ############################ genePredToBed ########################
 
+%apprun genePredToBed
+   exec genePredToBed
+
+%apphelp genePredToBed
+   genePredToBed (1.04.00) . https://hgdownload.soe.ucsc.edu/downloads.html
+
+%appinstall genePredToBed
+   curl -o /usr/local/bin/genePredToBed http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/genePredToBed
+   chmod +x /usr/local/bin/genePredToBed
 
 

@@ -1,4 +1,5 @@
 [![hackmd-github-sync-badge](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ/badge)](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ)
+[![DOI](https://zenodo.org/badge/216578481.svg)](https://zenodo.org/badge/latestdoi/216578481)
 
 # MethylSnake
 
@@ -65,7 +66,7 @@ A wrapper script with an example invocation can be found in `run_make_config.sh`
 
 ## How to run the pipeline
 
-The pipeline runs inside a Singularity container. This container should contain all the necessary tools to run the analysis. See [below](singularity-container) for additional details. 
+The pipeline runs inside a Singularity container. This container should contain all the necessary tools to run the analysis. See [below](#singularity-container) for additional details. 
 
 The pipeline can be started with the wrapper script `run_snakemake.sh`. 
 
@@ -111,10 +112,10 @@ The pipeline is designed to run within a Singularity container. The path to the 
 A working container can be pulled from SingularityHub:
 
 ```
-singularity pull --name methylkit.sif shub://ftabaro/MethylSnake
+singularity pull --name methylsnake.sif library://ftabaro/default/methylsnake 
 ```
 
-Recipe for this container can be found [here](https://github.com/ftabaro/MethylSnake/blob/master/singularity/Singularity) embedded in this repository.
+Checkout the [`singularity`](https://github.com/ftabaro/MethylSnake/tree/master/singularity) folder for more info.
 
 The container path has be specified in the command line arguments of the config script.
 
