@@ -1,4 +1,4 @@
-[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/4638) [![hackmd-github-sync-badge](https://hackmd.io/q4nlB0nJRLuvu7x96Gri2A/badge)](https://hackmd.io/q4nlB0nJRLuvu7x96Gri2A)
+[![hackmd-github-sync-badge](https://hackmd.io/q4nlB0nJRLuvu7x96Gri2A/badge)](https://hackmd.io/q4nlB0nJRLuvu7x96Gri2A)
 
 # MethylSnake Singularity container
 
