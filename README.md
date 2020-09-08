@@ -1,4 +1,5 @@
 [![hackmd-github-sync-badge](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ/badge)](https://hackmd.io/cksQRWI5SKOrVTogW4DzMQ)
+[![DOI](https://zenodo.org/badge/216578481.svg)](https://zenodo.org/badge/latestdoi/216578481)
 
 # MethylSnake
 
