@@ -14,11 +14,11 @@ The final container (`methylkit`) contain:
 
 ## Pulling the container
 
-A pre-compiled container image can be pulled from SingularityHub. This is the recommended way to use this container:
+A pre-compiled container image can be pulled from the Singularity Library. This is the recommended way to use this container:
 
 ```bash
-singularity pull shub://ftabaro/MethylSnake:methylkit
-```
+ singularity pull library://ftabaro/default/methylsnake 
+ ```
 
 ## Compiling the container 
 
