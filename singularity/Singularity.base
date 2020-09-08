@@ -59,28 +59,8 @@ From: centos:8
 	unzip \
 	wget \
 	rsync \
-	zlib zlib-devel \
-	bzip2 bzip2-devel \
-	xz xz-devel \
-	ncurses ncurses-devel \
 	java-1.8.0-openjdk java-1.8.0-openjdk-devel \
 	libffi-devel \
-	cairo cairo-devel \
-	fontconfig fontconfig-devel \
-	freetype freetype-devel \
-	fribidi fribidi-devel \
-	glib2 glib2-devel \
-	libcurl libcurl-devel \
-	libicu libicu-devel \
-	libjpeg libjpeg-devel \
-	libpng libpng-devel \
-	libtiff libtiff-devel \
-	libtirpc libtirpc-devel \
-	libxcrypt libxcrypt-devel \
-	pango pango-devel \
-	pcre pcre-devel \
-	readline readline-devel \
-	zlib zlib-devel \
 	openblas \
 	lapack \
 	gcc-gfortran \
