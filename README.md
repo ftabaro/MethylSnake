@@ -65,7 +65,7 @@ A wrapper script with an example invocation can be found in `run_make_config.sh`
 
 ## How to run the pipeline
 
-The pipeline runs inside a Singularity container. This container should contain all the necessary tools to run the analysis. See [below](singularity-container) for additional details. 
+The pipeline runs inside a Singularity container. This container should contain all the necessary tools to run the analysis. See [below](#singularity-container) for additional details. 
 
 The pipeline can be started with the wrapper script `run_snakemake.sh`. 
 
@@ -111,7 +111,7 @@ The pipeline is designed to run within a Singularity container. The path to the 
 A working container can be pulled from SingularityHub:
 
 ```
-singularity pull --name methylkit.sif shub://ftabaro/MethylSnake:methylkit
+singularity pull --name methylsnake.sif library://ftabaro/default/methylsnake 
 ```
 
 Checkout the [`singularity`](https://github.com/ftabaro/MethylSnake/tree/master/singularity) folder for more info.
