@@ -114,7 +114,7 @@ A working container can be pulled from SingularityHub:
 singularity pull --name methylkit.sif shub://ftabaro/MethylSnake:methylkit
 ```
 
-Checkout [this](https://github.com/ftabaro/MethylSnake/blob/master/singularity/README.md) for more info.
+Checkout the [`singularity`](https://github.com/ftabaro/MethylSnake/tree/master/singularity) folder for more info.
 
 The container path has be specified in the command line arguments of the config script.
 
