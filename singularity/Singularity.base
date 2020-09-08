@@ -9,17 +9,48 @@ From: centos:8
    Tools for MethylSnake pipeline. For complete list and instructions see: https://github.com/ftabaro/MethylSnake/tree/master/singularity
 
 %labels
-   Author francesco.tabaro@tuni.fi
-   Version 1
+   MAINTAINER francesco.tabaro@tuni.fi
+   VERSION 1.0
+
+%environment
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
 
 %post
   set -e
   
   NOW=`date`
+
+  LANG=en_US.UTF-8
+  LC_CTYPE="en_US.UTF-8"
+  LC_NUMERIC="en_US.UTF-8"
+  LC_TIME="en_US.UTF-8"
+  LC_COLLATE="en_US.UTF-8"
+  LC_MONETARY="en_US.UTF-8"
+  LC_MESSAGES="en_US.UTF-8"
+  LC_PAPER="en_US.UTF-8"
+  LC_NAME="en_US.UTF-8"
+  LC_ADDRESS="en_US.UTF-8"
+  LC_TELEPHONE="en_US.UTF-8"
+  LC_MEASUREMENT="en_US.UTF-8"
+  LC_IDENTIFICATION="en_US.UTF-8"
+
   echo "export NOW=\"${NOW}\"" >> $SINGULARITY_ENVIRONMENT
 
   dnf -y makecache
-  dnf -y install --allowerasing hostname which \
+  dnf -y install --allowerasing \
+        hostname which \
 	dnf-utils \
 	autoconf \
 	gcc gcc-c++ \
@@ -31,10 +62,8 @@ From: centos:8
 	zlib zlib-devel \
 	bzip2 bzip2-devel \
 	xz xz-devel \
-	libcurl libcurl-devel \
 	ncurses ncurses-devel \
 	java-1.8.0-openjdk java-1.8.0-openjdk-devel \
-	openssl-devel \
 	libffi-devel \
 	cairo cairo-devel \
 	fontconfig fontconfig-devel \
@@ -56,8 +85,6 @@ From: centos:8
 	lapack \
 	gcc-gfortran \
 	boost boost-devel \
-	texlive \
-	libxml2-devel \
 	python3-pip python36-devel
 
   ln -s /usr/bin/python3 /usr/bin/python
@@ -160,28 +187,6 @@ From: centos:8
 
 %apphelp bismark
     Bismark (0.22.3) . https://github.com/FelixKrueger/Bismark
-
-# ############################ R + Bioconductor + methylKit ########################
-
-%apprun R
-   exec R
-
-%apphelp R
-    R (4.0.2) . https://www.r-project.org/
-
-%appinstall R
- 
-  wget https://cran.r-project.org/src/base/R-4/R-4.0.2.tar.gz
-  tar xf R-4.0.2.tar.gz
-  cd R-4.0.2
-  ./configure --without-x 
-  make -j2
-  make install
-  cd ..
-  rm -r R-4.0.2
-
-  R -e "install.packages('BiocManager', repos = 'https://cloud.r-project.org')"
-  R -e "BiocManager::install(c('rtracklayer', 'methylKit'))"
 
 # ############################ gtfToGenePred ########################
 
