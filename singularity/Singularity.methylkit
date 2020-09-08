@@ -1,5 +1,5 @@
-Bootstrap: shub
-From: ftabaro/MethylSnake:base
+Bootstrap: localimage
+From: base.sif
 
 %setup
 
@@ -20,7 +20,6 @@ From: ftabaro/MethylSnake:base
 
   dnf -y makecache
   dnf -y install --allowerasing \
-        bzip2 bzip2-devel \
         cairo cairo-devel \
         fontconfig fontconfig-devel \
         freetype freetype-devel \
@@ -34,14 +33,11 @@ From: ftabaro/MethylSnake:base
         libtiff libtiff-devel \
         libtirpc libtirpc-devel \
         libxcrypt libxcrypt-devel \
-        ncurses ncursed-devel \
         pango pang-devel \
         pcre2 pcre2-devel \
         readline readline-devel \
 	openssl-devel \
 	readline readline-devel \
-        xz xz-devel \
-        zlib zlib-devel \
 	gcc-gfortran \
 	texlive \
 	libxml2-devel 

@@ -29,4 +29,6 @@ sudo singularity build base.sif Singularity.base
 sudo singularity build methylkit.sif Singularity.methylkit
 ```
 
+The `Singularity.methylkit` recipe expects a container called `base.sif` in the same directory as the recipe.
+
 ###### tags: `singularity` `methylsnake` `DNA-methylation` `rrbs`
