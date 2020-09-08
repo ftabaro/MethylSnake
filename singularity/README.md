@@ -2,7 +2,9 @@
 
 # MethylSnake Singularity container
 
-This is the recipe file for the Singularity container for the MethylSnake pipeline. It contains all the tools required to run it:
+This folder holds two recipes to run the MethylSnake pipeline. The `Singularity.base` recipe creates a container with basic tools (Bowtie2, TrimGalore!, Bismark, etc.), while the `Singularity.methylkit` recipe installs R and the required packages on top of the base container. To run the pipeline only the `methylkit` container is required. 
+
+The final container (`methylkit`) contain:
 - samtools
 - bowtie2
 - TrimGalore!
@@ -15,15 +17,16 @@ This is the recipe file for the Singularity container for the MethylSnake pipeli
 A pre-compiled container image can be pulled from SingularityHub. This is the recommended way to use this container:
 
 ```bash
-singularity pull shub://ftabaro/MethylSnake:latest
+singularity pull shub://ftabaro/MethylSnake:methylkit
 ```
 
 ## Compiling the container 
 
-The container image can be built locally with:
+The container images can be built locally with:
 
 ```bash
-singularity build MethylSnake.sif Singularity
+sudo singularity build base.sif Singularity.base
+sudo singularity build methylkit.sif Singularity.methylkit
 ```
 
 ###### tags: `singularity` `methylsnake` `DNA-methylation` `rrbs`
