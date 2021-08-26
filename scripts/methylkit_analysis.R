@@ -453,7 +453,7 @@ sample.id    <- sample_sheet$sample_name
 get_input_path <- function (sample.id) {
     # paired end
     input_paths  <- file.path(alignments_folder, paste0(sample.id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
-    if (!any(file.exists(input_paths)) {
+    if (!any(file.exists(input_paths))) {
         # single end
         input_paths <- file.path(alignments_folder, paste0(sample.id, "_trimmed_bismark_bt2.CpG_report.txt.gz"))
     }
