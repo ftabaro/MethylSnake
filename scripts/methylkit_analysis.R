@@ -449,7 +449,18 @@ export_bed <- function(paths) {
 ##--- load sample sheet, get sample_ids, input paths and treatment vector
 sample_sheet <- read.csv(samples_sheet_path, header = TRUE, sep=";", stringsAsFactor=FALSE)
 sample.id    <- sample_sheet$sample_name
-input_paths  <- file.path(alignments_folder, paste0(sample.id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
+
+get_input_path <- function (sample.id) {
+    # paired end
+    input_paths  <- file.path(alignments_folder, paste0(sample.id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
+    if (!any(file.exists(input_paths)) {
+        # single end
+        input_paths <- file.path(alignments_folder, paste0(sample.id, "_trimmed_bismark_bt2.CpG_report.txt.gz"))
+    }
+    return(input_paths)
+}
+
+input_paths  <- get_input_path(sample.id)
 treatment    <- as.numeric(sample_sheet$treatment)
 treatment_levels <- unique(treatment)
 
@@ -478,7 +489,8 @@ if (length(treatment_levels) > 2) {
           paste(cur_sample_id[cur_treatment == 1], collapse=", "),
           paste(cur_sample_id[cur_treatment == 0], collapse=", ")))
 
-        cur_input_paths <- file.path(alignments_folder, paste0(cur_sample_id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
+#         cur_input_paths <- file.path(alignments_folder, paste0(cur_sample_id, mate1_pattern, "_val_1_bismark_bt2_pe.CpG_report.txt.gz"))
+        cur_input_paths <- get_input_path(cur_sample_id)
 
         methylRawObj <- make_methylkitdb_object(cur_input_paths,
           cur_sample_id, cur_treatment,
